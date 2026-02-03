@@ -26,6 +26,9 @@ build:
 restore:
 	dotnet restore
 
+restore-tool:
+	dotnet tool restore
+
 # Clean the project
 clean:
 	dotnet clean
@@ -36,3 +39,10 @@ migrate:
 
 database-update:
 	dotnet ef database update --project src/Stamply.Infrastructure --startup-project src/Stamply.Presentation.API
+
+# Development Infrastructure
+dev-db:
+	docker compose -f docker-compose.dev.yml up -d
+
+dev-db-stop:
+	docker compose -f docker-compose.dev.yml down

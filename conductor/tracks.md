@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Containerize Development Environment with Docker and PostgreSQL**
+- [x] **Track: Containerize Development Environment with Docker and PostgreSQL**
   *Link: [./tracks/dev_infra_20260204/](./tracks/dev_infra_20260204/)*
