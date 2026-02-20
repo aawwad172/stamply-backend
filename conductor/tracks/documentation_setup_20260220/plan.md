@@ -10,9 +10,9 @@
     - [x] Remove renaming scripts or instructions that no longer apply.
 - [x] Task: Conductor - User Manual Verification 'README Overhaul' (Protocol in workflow.md)
 
-## Phase 2: Core Documentation Setup
+## Phase 2: Core Documentation Setup [checkpoint: 7f9a73d]
 - [x] Task: Initialize project documentation folder (a89cdc0)
     - [x] Create `docs/` directory.
-- [x] Task: Document Loyalty Card Business Rules (9a88469)
+- [x] Task: Document Loyalty Card Business Rules (9a88469, fa62d76)
     - [x] Create `docs/business-rules.md` explaining the loyalty system mechanics (Wallets, QR scanning).
-- [ ] Task: Conductor - User Manual Verification 'Core Documentation Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Core Documentation Setup' (Protocol in workflow.md)
