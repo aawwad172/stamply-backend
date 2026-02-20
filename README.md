@@ -106,7 +106,7 @@ If you have any ideas or improvements that could help enhance this template, don
 
 ## Conclusion
 
-This template is designed to jumpstart your .NET application development using best practices like DDD, Clean Architecture, DI, UnitOfWork, CQRS, and more. Customize the configuration files, update the connection strings and JWT settings, and extend the provided features to suit your application's needs.
+Stamply is built to provide a robust, enterprise-grade backend for digital loyalty programs. By leveraging DDD and Clean Architecture, it ensures that the system remains maintainable as your loyalty program grows.
 
 Happy coding!
 
