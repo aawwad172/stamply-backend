@@ -1,53 +1,19 @@
-# Stamply
+# Stamply - Digital Loyalty System
 
-This is a .NET template built using Domain-Driven Design (DDD) with Clean Architecture. It is designed to help you quickly set up an application with the following layers and patterns:
+Stamply is a modern digital loyalty card solution designed to replace physical stamp cards. It empowers businesses to create and manage digital loyalty programs that integrate seamlessly with Apple Wallet and Google Wallet. Customers can earn stamps and redeem rewards simply by scanning a QR code on their digital cards.
 
-- **Domain:** Contains your core business entities and logic.
-- **Application:** Houses use cases, CQRS command and query handlers, and application-specific services.
-- **Infrastructure:** Implements data access, repositories, UnitOfWork, and integration with external services (e.g., Postgres).
-- **Presentation:** Contains the Web API project, middleware (including JWT authentication, exception handling), and front-facing controllers.
+Built with a commitment to high engineering standards, Stamply follows **Domain-Driven Design (DDD)** and **Clean Architecture** principles to ensure a scalable and maintainable backend.
 
-## Features
+## Key Features
 
-- **Clean Architecture with DDD:**  
-  Organizes your solution into Domain, Application, Infrastructure, and Presentation projects.
-  
-- **Dependency Injection:**  
-  DI is set up for each project, ensuring loose coupling and easier testing.
+- **Digital Wallet Integration:** Seamless support for Apple and Google Wallets.
+- **QR Code Stamping:** Fast and secure "zero-friction" stamping via QR scanning.
+- **Flexible Program Management:** Businesses can easily define their own loyalty rules and rewards.
+- **Advanced Identity & Access:** Granular permissions and secure authentication using JWT.
+- **Clean Architecture:** Strictly organized into Domain, Application, Infrastructure, and Presentation layers.
+- **Reliable Persistence:** Built on PostgreSQL with EF Core, implementing Repository and Unit of Work patterns.
+- **Developer-Friendly Tools:** Automated migrations, Makefile for common tasks, and pre-commit hooks.
 
-- **CQRS and UnitOfWork:**  
-  Implements the CQRS pattern for separating commands and queries. Also includes a UnitOfWork pattern to manage transactions.
-
-- **Repository Patterns:**  
-  - A **Generic Repository** is provided for general CRUD operations.
-  - For operations with specific needs, you can create a custom repository by inheriting from the generic repository and overriding the necessary methods.
-
-- **JWT Middleware and Service:**  
-  Provides a built-in JWT middleware and a dedicated JWT service for handling authentication and authorization.  
-  **Important:** Make sure to change the variables in your `appsettings.json` (connection string, JWT secret, issuer, audience, and **EncryptionKey**) to match your own configuration.
-
-- **Postgres Integration:**  
-  The template is built on PostgreSQL. Connection strings and related configurations are set up accordingly.
-
-- **Health Endpoint:**  
-  A health endpoint is available to check both the database connection and server health.
-
-- **Husky for Pre-Commit Hooks:**  
-  Husky is configured to ensure code consistency before committing.  
-  **Note:** Install Husky via `npx` (e.g., `npx husky-init && npm install`) to activate pre-commit hooks for your .NET projects.
-
-- **Makefile for .NET CLI Tasks:**  
-  A Makefile is included for managing migrations (using EF Core), updating the database, running, and building the application.  
-  **Note:** The command to update the database has been renamed from `update-database` to `database-update` in the Makefile.
-
-- **Exception Handling Middleware:**  
-  A global exception handling middleware is provided. Simply throw your exceptions and let the middleware handle them.  
-  In addition, you can use the `ApiResponse` class for consistent and clean API responses.
-
-- **Fluent Validation:**  
-  This template uses Fluent Validation to handle exceptions and validation in a clean, separated manner. This ensures that your validation logic is decoupled from your controllers and business logic.
-
-- **Query Extension for Pagination:**  
   The template includes a query extension that simplifies pagination in your queries.
 
 ## Getting Started
