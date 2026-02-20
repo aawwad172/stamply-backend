@@ -6,8 +6,8 @@
 - [x] Task: Update setup and contribution instructions (1d4a763)
     - [x] Verify and update the "Getting Started" steps.
     - [x] Update the Makefile references if needed.
-- [ ] Task: Clean up template remnants
-    - [ ] Remove renaming scripts or instructions that no longer apply.
+- [x] Task: Clean up template remnants (67f00b3)
+    - [x] Remove renaming scripts or instructions that no longer apply.
 - [ ] Task: Conductor - User Manual Verification 'README Overhaul' (Protocol in workflow.md)
 
 ## Phase 2: Core Documentation Setup
