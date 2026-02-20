@@ -1,8 +1,8 @@
 # Plan: Update project documentation and README
 
 ## Phase 1: README Overhaul
-- [ ] Task: Update README header and project description
-    - [ ] Replace template intro with Stamply vision and features.
+- [x] Task: Update README header and project description (e031d1c)
+    - [x] Replace template intro with Stamply vision and features.
 - [ ] Task: Update setup and contribution instructions
     - [ ] Verify and update the "Getting Started" steps.
     - [ ] Update the Makefile references if needed.
