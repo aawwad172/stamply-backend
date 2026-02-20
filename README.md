@@ -18,9 +18,7 @@ Built with a commitment to high engineering standards, Stamply follows **Domain-
 
 ## Getting Started
 
-1. **Create Repository of this template:**
-
-2. **Install Dependencies:**
+1. **Install Dependencies:**
 
    - For Husky (pre-commit hooks), run:
      ```bash
@@ -30,14 +28,8 @@ Built with a commitment to high engineering standards, Stamply follows **Domain-
      ```bash
      dotnet restore
      ```
-3. **Rename the Project**
 
-   - Use the Renaming Script using `Make`
-     ```make
-     make rename-project name="<project_name>"
-     ```
-
-4. **Update Configuration:**
+2. **Update Configuration:**
 
    - Open `appsettings.json` and `appsettings.Development.json`.
    - Update the following configuration values:
