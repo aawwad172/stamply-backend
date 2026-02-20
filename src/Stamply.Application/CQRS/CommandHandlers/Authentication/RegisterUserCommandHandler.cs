@@ -38,10 +38,10 @@ public class RegisterUserCommandHandler(
         if (existingUsername is not null)
             throw new ConflictException("A user with this username already exists.");
 
-        // 1. Hash the password (returns combined HASH-SALT string)
+        // Hash the password using the security service (BCrypt)
         string hashedPassword = _securityService.HashSecret(request.Password);
 
-        // 2. Split the combined string into its two secure parts
+        // Generate a new security stamp
         string securityStamp = Guid.NewGuid().ToString();
 
         Guid id = Guid.CreateVersion7();
