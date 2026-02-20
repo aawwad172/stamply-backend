@@ -11,8 +11,8 @@
 - [x] Task: Conductor - User Manual Verification 'README Overhaul' (Protocol in workflow.md)
 
 ## Phase 2: Core Documentation Setup
-- [ ] Task: Initialize project documentation folder
-    - [ ] Create `docs/` directory.
+- [x] Task: Initialize project documentation folder (a89cdc0)
+    - [x] Create `docs/` directory.
 - [ ] Task: Document Loyalty Card Business Rules
     - [ ] Create `docs/business-rules.md` explaining the loyalty system mechanics (Wallets, QR scanning).
 - [ ] Task: Conductor - User Manual Verification 'Core Documentation Setup' (Protocol in workflow.md)
