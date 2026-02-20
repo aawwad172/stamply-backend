@@ -17,6 +17,7 @@
 
 ## Security & Authentication
 - **Auth:** JWT (JSON Web Tokens)
+- **Password Hashing:** BCrypt (using BCrypt.Net-Next)
 - **Services:** Dedicated `JwtService`, `PermissionService`, `SecurityService`
 - **Middleware:** Custom JWT and Exception Handling middleware.
 

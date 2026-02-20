@@ -1,40 +1,20 @@
 using System.Security.Cryptography;
 using System.Text;
 
-using Stamply.Application.Utilities;
 using Stamply.Domain.Interfaces.Application.Services;
 
 using Microsoft.Extensions.Configuration;
+using Stamply.Application.Utilities;
 
 namespace Stamply.Application.Services;
 
 public class SecurityService(IConfiguration configuration) : ISecurityService
 {
     private readonly byte[] _encryptionKey = Encoding.UTF8.GetBytes(configuration.GetRequiredSetting("Security:EncryptionKey"));
-    private const int SaltSize = 16;
-    private const int HashSize = 32;
-    private const int Iterations = 100000;
-    private static readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA512;
-
-    public string Hash(string input)
-    {
-        using SHA256 sha256 = SHA256.Create();
-        byte[] bytes = Encoding.UTF8.GetBytes(input);
-        byte[] hash = sha256.ComputeHash(bytes);
-        return Convert.ToBase64String(hash);
-    }
 
     public string HashSecret(string password)
     {
-        byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
-        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
-            password: password,
-            salt: salt,
-            iterations: Iterations,
-            hashAlgorithm: Algorithm,
-            outputLength: HashSize);
-
-        return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
     public string EncryptString(string text)
@@ -91,18 +71,13 @@ public class SecurityService(IConfiguration configuration) : ISecurityService
 
     public bool VerifySecret(string password, string passwordHash)
     {
-        (string? hash, string? salt) = SecurityUtilities.SplitHashSalt(passwordHash);
-
-        byte[] hashBytes = Convert.FromHexString(hash);
-        byte[] saltBytes = Convert.FromHexString(salt);
-
-        byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(password, saltBytes, Iterations, Algorithm, HashSize);
-
-        return CryptographicOperations.FixedTimeEquals(hashBytes, inputHash);
-    }
-
-    public bool VerifyHash(string input, string hashedInput)
-    {
-        return Hash(input) == hashedInput;
+        try
+        {
+            return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+        }
+        catch (BCrypt.Net.SaltParseException)
+        {
+            return false;
+        }
     }
 }
