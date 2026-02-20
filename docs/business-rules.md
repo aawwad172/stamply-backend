@@ -42,6 +42,7 @@ This document outlines the core business rules and mechanics of the Stamply digi
 - Only authorized staff members with the appropriate permissions can add stamps or redeem rewards.
 - Every transaction (stamp/redemption) is logged for auditing purposes.
 
-### 4.2 Anti-Fraud
-- QR codes are securely generated and validated to prevent unauthorized stamping.
-- The system prevents duplicate stamps from a single purchase based on business rules.
+### 4.2 Anti-Fraud and Migration Support
+- **QR Code Integrity:** QR codes are securely generated and validated to prevent unauthorized stamping.
+- **Migration Flexibility:** To support businesses migrating from physical cards or other digital systems, the Stamply system allows for adding **multiple stamps at once** during the initial setup or migration phase. This ensures users do not lose their existing progress.
+- **Audit Trails:** Every stamping action, whether single or multiple, is logged with the merchant ID and timestamp for fraud prevention and auditing.
