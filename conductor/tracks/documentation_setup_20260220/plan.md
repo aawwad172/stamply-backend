@@ -13,6 +13,6 @@
 ## Phase 2: Core Documentation Setup
 - [x] Task: Initialize project documentation folder (a89cdc0)
     - [x] Create `docs/` directory.
-- [ ] Task: Document Loyalty Card Business Rules
-    - [ ] Create `docs/business-rules.md` explaining the loyalty system mechanics (Wallets, QR scanning).
+- [x] Task: Document Loyalty Card Business Rules (9a88469)
+    - [x] Create `docs/business-rules.md` explaining the loyalty system mechanics (Wallets, QR scanning).
 - [ ] Task: Conductor - User Manual Verification 'Core Documentation Setup' (Protocol in workflow.md)
