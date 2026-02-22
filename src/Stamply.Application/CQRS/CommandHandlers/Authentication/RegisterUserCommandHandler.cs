@@ -1,5 +1,3 @@
-
-
 using Stamply.Application.CQRS.Commands.Authentication;
 using Stamply.Domain.Exceptions;
 using Stamply.Domain.Interfaces.Application.Services;
