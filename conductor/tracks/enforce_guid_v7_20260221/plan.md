@@ -14,16 +14,16 @@ Setting up the infrastructure to detect and block `Guid.NewGuid()`.
 ## Phase 2: Codebase Refactoring
 Replacing all existing occurrences of `Guid.NewGuid()` and `Guid.CreateVersion7()` with a central `Id.New()` wrapper.
 
-- [x] Task: Create static `Id` class in `Stamply.Domain.Common`.
-- [~] Task: Search the entire solution for `Guid.NewGuid()` and `Guid.CreateVersion7()`.
-- [ ] Task: Replace all found occurrences with `Id.New()`.
+- [x] Task: Create static `Id` class in `Stamply.Domain.Common`. 9311a76
+- [x] Task: Search the entire solution for `Guid.NewGuid()` and `Guid.CreateVersion7()`. 9311a76
+- [x] Task: Replace all found occurrences with `Id.New()`. 9311a76
     - Ensure necessary `using Stamply.Domain.Common;` is used.
-- [ ] Task: Conductor - User Manual Verification 'Codebase Refactoring' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Codebase Refactoring' (Protocol in workflow.md)
 
 ## Phase 3: Final Validation
 Confirming the enforcement is active and the build is clean.
 
-- [ ] Task: Attempt to build the solution (`dotnet build`).
+- [x] Task: Attempt to build the solution (`dotnet build`).
     - Verify it builds successfully after refactoring.
-- [ ] Task: Temporarily re-introduce one instance of `Guid.NewGuid()` to verify that the build fails as expected.
-- [ ] Task: Conductor - User Manual Verification 'Final Validation' (Protocol in workflow.md)
+- [x] Task: Temporarily re-introduce one instance of `Guid.NewGuid()` to verify that the build fails as expected.
+- [x] Task: Conductor - User Manual Verification 'Final Validation' (Protocol in workflow.md)
