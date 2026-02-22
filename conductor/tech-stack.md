@@ -8,7 +8,7 @@
 ## Data & Persistence
 - **Database:** PostgreSQL
 - **ORM:** Entity Framework Core (EF Core)
-- **Patterns:** Repository Pattern, Unit of Work
+- **Patterns:** Repository Pattern, Unit of Work, EF Core SaveChanges Interceptors (for Automated Auditing)
 
 ## Application Logic
 - **Pattern:** CQRS (Command Query Responsibility Segregation)

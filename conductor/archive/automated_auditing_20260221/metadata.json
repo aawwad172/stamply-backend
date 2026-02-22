@@ -1,0 +1,8 @@
+{
+  "track_id": "automated_auditing_20260221",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-02-21T00:00:00Z",
+  "updated_at": "2026-02-21T00:00:00Z",
+  "description": "We want to make the db context to update the created by and created at and update by and update at to be automatically and it can get it from the user context service without the need to do this manually in the handlers"
+}
