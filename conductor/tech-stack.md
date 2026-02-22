@@ -25,3 +25,4 @@
 - **CLI Tasks:** Makefile
 - **Pre-commit Hooks:** Husky
 - **API Documentation:** Swagger/OpenAPI with custom Auth extension.
+- **Static Analysis:** Microsoft.CodeAnalysis.BannedApiAnalyzers (to enforce Guid.CreateVersion7)
