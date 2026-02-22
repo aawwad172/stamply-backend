@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 
+using Stamply.Domain.Common;
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.ValueObjects;
 using Stamply.Domain.Entities.Identity.Authentication;
@@ -46,7 +47,7 @@ public static class DbInitializer
                     CreatedBy = systemUserId,
                     Credentials = new UserCredentials
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Id.New(),
                         UserId = systemUserId,
                         PasswordHash = configuration.GetRequiredSetting("Security:SystemAdminPasswordHash")
                     }

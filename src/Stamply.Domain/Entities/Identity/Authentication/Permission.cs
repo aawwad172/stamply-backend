@@ -4,7 +4,7 @@ namespace Stamply.Domain.Entities.Identity.Authentication;
 
 public class Permission : IBaseEntity
 {
-    public Guid Id { get; init; } = Guid.CreateVersion7();
+    public Guid Id { get; init; }
 
     /// <summary>
     /// Stable unique key used in code/policies, e.g. "Users.Read", "Roles.Write".

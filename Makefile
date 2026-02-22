@@ -10,6 +10,9 @@ rename-project:
 install-dotnet-ef:
 	dotnet tool install --local dotnet-ef
 
+restore-tool:
+	dotnet tool restore
+
 # Run the API project
 run:
 	dotnet run --project src/Stamply.Presentation.API
@@ -36,3 +39,9 @@ migrate:
 
 database-update:
 	dotnet ef database update --project src/Stamply.Infrastructure --startup-project src/Stamply.Presentation.API
+
+dev-db:
+	docker compose -f docker-compose.dev.yml up -d
+
+dev-db-stop:
+	docker compose -f docker-compose.dev.yml down

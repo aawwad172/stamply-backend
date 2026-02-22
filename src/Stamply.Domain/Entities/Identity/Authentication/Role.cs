@@ -4,7 +4,7 @@ namespace Stamply.Domain.Entities.Identity.Authentication;
 
 public class Role : IBaseEntity
 {
-    public Guid Id { get; init; } = Guid.CreateVersion7();
+    public Guid Id { get; init; }
 
     // Human-friendly identifier (e.g., "SuperAdmin", "TenantAdmin", "SubAdmin", "AppUser")
     public required string Name { get; init; }

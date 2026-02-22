@@ -26,7 +26,7 @@ public class AuthenticationRepository(ApplicationDbContext dbContext) : IAuthent
         // Query RolePermissions for all permissions granted by the user's roles
         return await _dbContext.RolePermissions
             .Where(rp => roleIds.Contains(rp.RoleId))
-            .Select(rp => rp.Permission.Name)
+            .Select(rp => rp.Permission!.Name)
             .Distinct()
             .ToListAsync();
     }
@@ -43,13 +43,13 @@ public class AuthenticationRepository(ApplicationDbContext dbContext) : IAuthent
     {
         return await _dbContext.UserRoles
                .Where(ur => ur.UserId == userId)
-               .Select(ur => ur.Role.Name) // EF Core translates this join efficiently
+               .Select(ur => ur.Role!.Name) // EF Core translates this join efficiently
                .ToListAsync();
     }
 
     public async Task<bool> IsUserInRoleAsync(Guid userId, string roleName)
     {
         return await _dbContext.UserRoles
-                .AnyAsync(ur => ur.UserId == userId && ur.Role.Name == roleName);
+                .AnyAsync(ur => ur.UserId == userId && ur.Role!.Name == roleName);
     }
 }

@@ -11,6 +11,7 @@ using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Stamply.Domain.Common;
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.Entities.Identity.Authentication;
 
@@ -41,7 +42,7 @@ public class JwtService(
             new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
             new(JwtRegisteredClaimNames.UniqueName, user.Username),
             new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Jti, Guid.CreateVersion7().ToString()), // Unique Token ID
+            new(JwtRegisteredClaimNames.Jti, Id.New().ToString()), // Unique Token ID
             // --- ADD SECURITY STAMP CLAIM HERE ---
             new("security_stamp", user.SecurityStamp)
         };
@@ -97,7 +98,7 @@ public class JwtService(
 
         RefreshToken refreshToken = new()
         {
-            Id = Guid.CreateVersion7(),
+            Id = Id.New(),
             TokenHash = combinedHashSalt,
             PlaintextToken = plaintextToken,
             UserId = user.Id,

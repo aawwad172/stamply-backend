@@ -5,6 +5,7 @@ using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 
 using Microsoft.Extensions.Logging;
+using Stamply.Domain.Common;
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.Entities.Identity.Authentication;
 
@@ -67,7 +68,7 @@ public class LogoutCommandHandler(
             // The next time an active Access Token is presented, the SecurityStamp check
             // in the JwtService.ValidateToken method will fail.
             // --------------------------------------------------------------------------
-            user.SecurityStamp = Guid.NewGuid().ToString();
+            user.SecurityStamp = Id.New().ToString();
 
 
             // Update the token entity in the repository.

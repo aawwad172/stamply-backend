@@ -4,6 +4,7 @@ using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 
 using Microsoft.Extensions.Logging;
+using Stamply.Domain.Common;
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.Entities.Identity.Authentication;
 
@@ -46,7 +47,7 @@ public class LoginCommandHandler(
                 throw new UnauthenticatedException("Invalid email or password");
 
             // All tokens for this session belong to one family ID
-            Guid tokenFamilyId = Guid.NewGuid();
+            Guid tokenFamilyId = Id.New();
 
             string accessToken = await _jwtService.GenerateAccessTokenAsync(user);
 

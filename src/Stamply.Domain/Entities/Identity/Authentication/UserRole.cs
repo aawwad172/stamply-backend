@@ -3,9 +3,9 @@ namespace Stamply.Domain.Entities.Identity.Authentication;
 public class UserRole
 {
     public required Guid UserId { get; set; }
-    public User User { get; set; } = null!;
+    public User? User { get; set; }
 
     // Which role
     public required Guid RoleId { get; set; }
-    public Role Role { get; set; } = null!;          // Role entity will be added next
+    public Role? Role { get; set; }
 }

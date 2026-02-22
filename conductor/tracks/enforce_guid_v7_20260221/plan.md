@@ -3,20 +3,21 @@
 ## Phase 1: Global Build Configuration
 Setting up the infrastructure to detect and block `Guid.NewGuid()`.
 
-- [ ] Task: Create `Directory.Build.props` in the root directory.
+- [x] Task: Create `Directory.Build.props` in the root directory. 0ca702c
     - Configure it to include the `Microsoft.CodeAnalysis.BannedApiAnalyzers` package for all projects.
     - Set `EnforceCodeStyleInBuild` to `true`.
-- [ ] Task: Create `BannedSymbols.txt` in the root directory.
+- [x] Task: Create `BannedSymbols.txt` in the root directory. 0ca702c
     - Add `M:System.Guid.NewGuid;Use Guid.CreateVersion7() instead` to the file.
-- [ ] Task: Update project files or `Directory.Build.props` to ensure `BannedSymbols.txt` is treated as an `AdditionalFiles` item for the analyzer.
-- [ ] Task: Conductor - User Manual Verification 'Global Build Configuration' (Protocol in workflow.md)
+- [x] Task: Update project files or `Directory.Build.props` to ensure `BannedSymbols.txt` is treated as an `AdditionalFiles` item for the analyzer. 0ca702c
+- [~] Task: Conductor - User Manual Verification 'Global Build Configuration' (Protocol in workflow.md)
 
 ## Phase 2: Codebase Refactoring
-Replacing all existing occurrences of `Guid.NewGuid()` to satisfy the new build rules.
+Replacing all existing occurrences of `Guid.NewGuid()` and `Guid.CreateVersion7()` with a central `Id.New()` wrapper.
 
-- [ ] Task: Search the entire solution for `Guid.NewGuid()`.
-- [ ] Task: Replace all found occurrences with `Guid.CreateVersion7()`.
-    - Ensure necessary `using System;` or fully qualified names are used.
+- [x] Task: Create static `Id` class in `Stamply.Domain.Common`.
+- [~] Task: Search the entire solution for `Guid.NewGuid()` and `Guid.CreateVersion7()`.
+- [ ] Task: Replace all found occurrences with `Id.New()`.
+    - Ensure necessary `using Stamply.Domain.Common;` is used.
 - [ ] Task: Conductor - User Manual Verification 'Codebase Refactoring' (Protocol in workflow.md)
 
 ## Phase 3: Final Validation

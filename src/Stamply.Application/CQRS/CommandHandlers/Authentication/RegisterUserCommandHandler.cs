@@ -4,6 +4,7 @@ using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 
 using Microsoft.Extensions.Logging;
+using Stamply.Domain.Common;
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.Entities.Identity.Authentication;
 using Stamply.Domain.ValueObjects;
@@ -45,13 +46,13 @@ public class RegisterUserCommandHandler(
 
 
         // Generate a new security stamp
-        string securityStamp = Guid.NewGuid().ToString();
+        string securityStamp = Id.New().ToString();
 
-        Guid id = Guid.CreateVersion7();
+        Guid id = Id.New();
 
         UserCredentials userCreds = new()
         {
-            Id = Guid.CreateVersion7(),
+            Id = Id.New(),
             UserId = id,
             PasswordHash = hashedPassword
 

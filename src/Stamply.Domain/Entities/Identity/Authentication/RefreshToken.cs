@@ -6,11 +6,11 @@ namespace Stamply.Domain.Entities.Identity.Authentication;
 public class RefreshToken : IEntity, ICreationAudit
 {
     // Identity
-    public Guid Id { get; init; } = Guid.CreateVersion7();
+    public Guid Id { get; init; }
 
     // Link to user/session family
     public required Guid UserId { get; set; }
-    public User User { get; set; } = null!;
+    public User? User { get; set; }
     public required Guid TokenFamilyId { get; set; }  // all rotations in one login share this
 
     // Security (store only hashed token)
