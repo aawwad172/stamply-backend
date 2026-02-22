@@ -1,7 +1,4 @@
 using System.Reflection;
-
-using Stamply.Domain.Entities;
-using Stamply.Domain.Entities.Authentication;
 using Stamply.Domain.Interfaces.Domain.Auditing;
 using Stamply.Infrastructure.Configurations;
 using Stamply.Infrastructure.Configurations.Seed;
@@ -10,8 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Stamply.Domain.Entities.Identity;
+using Stamply.Domain.Entities.Identity.Authentication;
 
 namespace Stamply.Infrastructure.Persistence;
 
@@ -25,6 +23,7 @@ public class ApplicationDbContext(
     private readonly ILogger<ApplicationDbContext> _logger = logger;
     // DbSet properties for the main entities and join tables
     public DbSet<User> Users { get; set; }
+    public DbSet<UserCredentials> UserCredentials { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
@@ -39,7 +38,7 @@ public class ApplicationDbContext(
 
         // Apply configurations in specific order
         modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new UsersSeed(_configuration));
+        modelBuilder.ApplyConfiguration(new UserCredentialsConfiguration());
 
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
         modelBuilder.ApplyConfiguration(new RolesSeed());
@@ -49,7 +48,6 @@ public class ApplicationDbContext(
 
         // Apply relationship configurations last
         modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
-        modelBuilder.ApplyConfiguration(new UsersRolesSeed());
 
         modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         modelBuilder.ApplyConfiguration(new RolesPermissionsSeed());

@@ -1,9 +1,12 @@
 using MediatR;
 
+using Stamply.Domain.ValueObjects;
+
 namespace Stamply.Application.CQRS.Commands.Authentication;
 
 public record RegisterUserCommand(
     string FirstName,
+    string MiddleName,
     string LastName,
     string Email,
     string Username,
@@ -11,8 +14,7 @@ public record RegisterUserCommand(
 
 public record RegisterUserCommandResult(
     Guid Id,
-    string FirstName,
-    string LastName,
+    FullName FullName,
     string Email,
     string Username,
     bool IsActive,

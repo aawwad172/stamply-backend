@@ -1,4 +1,4 @@
-namespace Stamply.Domain.Entities.Authentication;
+namespace Stamply.Domain.Entities.Identity.Authentication;
 
 public class RolePermission
 {

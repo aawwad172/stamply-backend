@@ -3,6 +3,7 @@ using Stamply.Application.CQRS.Commands.Authentication;
 using Stamply.Application.Utilities;
 using Stamply.Domain;
 using Stamply.Infrastructure;
+using Stamply.Infrastructure.Persistence;
 using Stamply.Presentation.API;
 // using Stamply.Presentation.API.Configurations;
 using Stamply.Presentation.API.Middlewares;
@@ -30,6 +31,12 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 WebApplication app = builder.Build();
+
+// Hybrid Seed Logic: Runs migrations and seeds data
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
+{
+    await app.Services.ApplyMigrationsAndSeedAsync();
+}
 
 // Map health check endpoint
 app.MapHealthChecks("/health");

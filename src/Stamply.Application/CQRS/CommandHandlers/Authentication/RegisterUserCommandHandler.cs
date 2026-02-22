@@ -1,13 +1,14 @@
 
 
 using Stamply.Application.CQRS.Commands.Authentication;
-using Stamply.Domain.Entities;
-using Stamply.Domain.Entities.Authentication;
 using Stamply.Domain.Exceptions;
 using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 
 using Microsoft.Extensions.Logging;
+using Stamply.Domain.Entities.Identity;
+using Stamply.Domain.Entities.Identity.Authentication;
+using Stamply.Domain.ValueObjects;
 
 namespace Stamply.Application.CQRS.CommandHandlers.Authentication;
 
@@ -18,10 +19,12 @@ public class RegisterUserCommandHandler(
     IUserRepository userRepository,
     ISecurityService securityService,
     IRoleRepository roleRepository,
+    IRepository<UserCredentials> userCredentialsRepository,
     IUnitOfWork unitOfWork) : BaseHandler<RegisterUserCommand, RegisterUserCommandResult>(currentUserService, logger, unitOfWork)
 {
     private readonly IAuthenticationRepository _authenticationRepository = authenticationRepository;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IRepository<UserCredentials> _userCredentialsRepository = userCredentialsRepository;
     private readonly ISecurityService _securityService = securityService;
     private readonly IRoleRepository _roleRepository = roleRepository;
     private readonly string _defaultRoleName = "User";
@@ -41,10 +44,20 @@ public class RegisterUserCommandHandler(
         // Hash the password using the security service (BCrypt)
         string hashedPassword = _securityService.HashSecret(request.Password);
 
+
+
         // Generate a new security stamp
         string securityStamp = Guid.NewGuid().ToString();
 
         Guid id = Guid.CreateVersion7();
+
+        UserCredentials userCreds = new()
+        {
+            Id = Guid.CreateVersion7(),
+            UserId = id,
+            PasswordHash = hashedPassword
+
+        };
 
         Role? defaultRole = await _roleRepository.GetRoleByNameAsync(_defaultRoleName);
 
@@ -57,15 +70,14 @@ public class RegisterUserCommandHandler(
         User user = new()
         {
             Id = id,
-            FirstName = request.FirstName,
-            LastName = request.LastName,
+            FullName = new FullName
+            {
+                FirstName = request.FirstName,
+                MiddleName = request.MiddleName,
+                LastName = request.LastName
+            },
             Email = request.Email,
             Username = request.Username,
-            PasswordHash = hashedPassword,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            CreatedBy = Guid.Empty,
-            UpdatedBy = Guid.Empty,
             IsActive = false,
             IsDeleted = false,
             IsVerified = false,
@@ -76,6 +88,7 @@ public class RegisterUserCommandHandler(
         try
         {
             await _userRepository.AddAsync(user);
+            await _userCredentialsRepository.AddAsync(userCreds);
 
             UserRole userRole = new()
             {
@@ -84,13 +97,12 @@ public class RegisterUserCommandHandler(
             };
             await _authenticationRepository.AddUserRoleAsync(userRole); // Assuming IAuthRepository has this method
 
-            await _unitOfWork.SaveAsync();
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.SaveAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return new RegisterUserCommandResult(
                 Id: user.Id,
-                FirstName: user.FirstName,
-                LastName: user.LastName,
+                FullName: user.FullName,
                 Email: user.Email,
                 Username: user.Username,
                 IsActive: user.IsActive,
@@ -103,6 +115,5 @@ public class RegisterUserCommandHandler(
             await _unitOfWork.RollbackAsync();
             throw;
         }
-
     }
 }

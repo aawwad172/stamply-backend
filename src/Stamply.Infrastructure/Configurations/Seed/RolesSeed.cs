@@ -1,7 +1,7 @@
-using Stamply.Domain.Entities.Authentication;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+using Stamply.Domain.Entities.Identity.Authentication;
 
 namespace Stamply.Infrastructure.Configurations.Seed;
 

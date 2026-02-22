@@ -1,8 +1,7 @@
-
-using Stamply.Domain.Entities;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 
 using Microsoft.EntityFrameworkCore;
+using Stamply.Domain.Entities.Identity;
 
 namespace Stamply.Infrastructure.Persistence.Repositories;
 
@@ -10,8 +9,10 @@ public sealed class UserRepository(ApplicationDbContext dbContext) : Repository<
 {
     public async Task<User?> GetUserByEmailAsync(string email)
         => await _dbSet.IgnoreQueryFilters()
+                .Include(user => user.Credentials)
                 .FirstOrDefaultAsync(user => user.Email == email);
 
     public async Task<User?> GetUserByUsernameAsync(string username)
-        => await _dbSet.FirstOrDefaultAsync(user => user.Username == username);
+        => await _dbSet.Include(user => user.Credentials)
+                .FirstOrDefaultAsync(user => user.Username == username);
 }

@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-using Stamply.Application.Services;
 using Stamply.Domain.Exceptions;
 using Stamply.Domain.Interfaces.Application.Services;
 

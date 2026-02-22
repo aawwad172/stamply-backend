@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 
 using Stamply.Application.Utilities;
-using Stamply.Domain.Entities;
 using Stamply.Domain.Entities.Authentication;
 using Stamply.Domain.Exceptions;
 using Stamply.Domain.Interfaces.Application.Services;
@@ -12,6 +11,8 @@ using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Stamply.Domain.Entities.Identity;
+using Stamply.Domain.Entities.Identity.Authentication;
 
 namespace Stamply.Application.Services;
 
@@ -36,7 +37,7 @@ public class JwtService(
         var claims = new List<Claim>
         {
             // Core Identity Claims
-            new(JwtRegisteredClaimNames.Name, user.FirstName + " " + user.LastName),
+            new(JwtRegisteredClaimNames.Name, user.FullName.FirstName + " " + user.FullName.MiddleName + " " + user.FullName.LastName),
             new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
             new(JwtRegisteredClaimNames.UniqueName, user.Username),
             new(JwtRegisteredClaimNames.Email, user.Email),
@@ -101,8 +102,6 @@ public class JwtService(
             PlaintextToken = plaintextToken,
             UserId = user.Id,
             ExpiresAt = expiresAt,
-            CreatedAt = DateTime.UtcNow,
-            CreatedBy = user.Id,
             SecurityStampAtIssue = user.SecurityStamp,
             TokenFamilyId = tokenFamilyId
         };

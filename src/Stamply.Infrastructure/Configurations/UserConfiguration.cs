@@ -1,7 +1,7 @@
-using Stamply.Domain.Entities;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+using Stamply.Domain.Entities.Identity;
 
 namespace Stamply.Infrastructure.Configurations;
 
@@ -15,13 +15,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
 
         // Required basics
-        builder.Property(u => u.FirstName)
-            .IsRequired()
-            .HasMaxLength(50);
-
-        builder.Property(u => u.LastName)
-            .IsRequired()
-            .HasMaxLength(50);
+        builder.OwnsOne(u => u.FullName);
 
         // Email & Username (unique)
         builder.Property(u => u.Email)
@@ -37,15 +31,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.Username).IsUnique();
 
         // AuthN fields
-        builder.Property(u => u.PasswordHash)
-            .IsRequired()
-            .HasMaxLength(256);
-
         builder.Property(u => u.IsActive)
             .HasDefaultValue(true);
-
-        builder.Property(u => u.SecurityStamp)
-            .HasMaxLength(128);
 
         // Auditing
         builder.Property(u => u.CreatedAt).IsRequired();

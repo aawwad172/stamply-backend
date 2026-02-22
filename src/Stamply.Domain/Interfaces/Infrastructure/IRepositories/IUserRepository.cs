@@ -1,4 +1,4 @@
-using Stamply.Domain.Entities;
+using Stamply.Domain.Entities.Identity;
 
 namespace Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 

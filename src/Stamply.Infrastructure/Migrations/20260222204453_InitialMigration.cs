@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -53,17 +54,17 @@ namespace Stamply.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    FullName_FirstName = table.Column<string>(type: "text", nullable: false),
+                    FullName_MiddleName = table.Column<string>(type: "text", nullable: true),
+                    FullName_LastName = table.Column<string>(type: "text", nullable: false),
                     Username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    PasswordHash = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    SecurityStamp = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    SecurityStamp = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -129,6 +130,25 @@ namespace Stamply.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserCredentials",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserCredentials", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserCredentials_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 columns: table => new
                 {
@@ -172,15 +192,6 @@ namespace Stamply.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "CreatedAt", "CreatedBy", "Email", "FirstName", "IsActive", "IsDeleted", "IsVerified", "LastName", "PasswordHash", "SecurityStamp", "UpdatedAt", "UpdatedBy", "Username" },
-                values: new object[,]
-                {
-                    { new Guid("11111111-1111-7111-8111-111111111111"), new DateTime(2025, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("a0000000-0000-7000-8000-000000000000"), "aawwad172@gmail.com", "Initial", true, false, true, "Admin", "5658A3510D0C8BA1DFD6AF62A44E06736E0B8E43B25464887D6007E5688C7270-7F8784D082093474FEED885A5F977C20", "10/15/2025 00:00:00", null, null, "admin" },
-                    { new Guid("a0000000-0000-7000-8000-000000000000"), new DateTime(2025, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("a0000000-0000-7000-8000-000000000000"), "system@example.com", "system", true, false, true, "system", "C70A4E72A68BFBAD78B7D4186D7BABE668E9D29B728F208513BF00F08A789E4E-5BBDF5344D620DBC46984385FE5C9302", "10/15/2025 00:00:00", null, null, "system" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "RolePermissions",
                 columns: new[] { "PermissionId", "RoleId" },
                 values: new object[,]
@@ -191,11 +202,6 @@ namespace Stamply.Infrastructure.Migrations
                     { new Guid("66666666-6666-7666-8666-666666666666"), new Guid("22222222-2222-7222-8222-222222222222") },
                     { new Guid("66666666-6666-7666-8666-666666666666"), new Guid("33333333-3333-7333-8333-333333333333") }
                 });
-
-            migrationBuilder.InsertData(
-                table: "UserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { new Guid("22222222-2222-7222-8222-222222222222"), new Guid("11111111-1111-7111-8111-111111111111") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Permissions_Name",
@@ -252,6 +258,12 @@ namespace Stamply.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserCredentials_UserId",
+                table: "UserCredentials",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
@@ -282,6 +294,9 @@ namespace Stamply.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RolePermissions");
+
+            migrationBuilder.DropTable(
+                name: "UserCredentials");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");

@@ -1,11 +1,11 @@
 using Stamply.Application.CQRS.Commands.Authentication;
-using Stamply.Domain.Entities;
-using Stamply.Domain.Entities.Authentication;
 using Stamply.Domain.Exceptions;
 using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 
 using Microsoft.Extensions.Logging;
+using Stamply.Domain.Entities.Identity;
+using Stamply.Domain.Entities.Identity.Authentication;
 
 namespace Stamply.Application.CQRS.CommandHandlers.Authentication;
 
@@ -38,9 +38,9 @@ public class LoginCommandHandler(
             if (user.IsDeleted is true)
                 throw new DeletedUserException($"User {user.Id} is deleted");
 
-            if (!_securityService.VerifySecret(
+            if (user.Credentials is null || !_securityService.VerifySecret(
                         secret: request.Password,
-                        secretHash: user.PasswordHash
+                        secretHash: user.Credentials.PasswordHash
                     )
                 )
                 throw new UnauthenticatedException("Invalid email or password");

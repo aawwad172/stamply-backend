@@ -1,7 +1,7 @@
 using Stamply.Domain.Interfaces.Domain;
 using Stamply.Domain.Interfaces.Domain.Auditing;
 
-namespace Stamply.Domain.Entities.Authentication;
+namespace Stamply.Domain.Entities.Identity.Authentication;
 
 public class RefreshToken : IEntity, ICreationAudit
 {
@@ -30,8 +30,8 @@ public class RefreshToken : IEntity, ICreationAudit
     public string? SecurityStampAtIssue { get; set; }  // copy of user's SecurityStamp at issuance (optional but useful)
 
     // Auditing
-    public required DateTime CreatedAt { get; init; }
-    public required Guid CreatedBy { get; init; }       // usually = UserId
+    public DateTime CreatedAt { get; set; }
+    public Guid CreatedBy { get; set; }       // usually = UserId
 
     // Convenience (not mapped)
     public bool IsExpired => DateTime.UtcNow >= ExpiresAt;

@@ -1,8 +1,8 @@
-using Stamply.Domain.Entities.Authentication;
 using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 
 using Microsoft.EntityFrameworkCore;
+using Stamply.Domain.Entities.Identity.Authentication;
 
 namespace Stamply.Infrastructure.Persistence.Repositories;
 

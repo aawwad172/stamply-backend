@@ -1,6 +1,6 @@
 using Stamply.Domain.Interfaces.Domain.Auditing;
 
-namespace Stamply.Domain.Entities.Authentication;
+namespace Stamply.Domain.Entities.Identity.Authentication;
 
 public class Permission : IBaseEntity
 {
@@ -18,8 +18,8 @@ public class Permission : IBaseEntity
 
     // Navigations
     public ICollection<RolePermission> RolePermissions { get; set; } = [];
-    public DateTime CreatedAt { get; init; }
-    public Guid CreatedBy { get; init; }
+    public DateTime CreatedAt { get; set; }
+    public Guid CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public Guid? UpdatedBy { get; set; }
     public bool IsDeleted { get; set; } = false;

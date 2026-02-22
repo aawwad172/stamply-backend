@@ -18,7 +18,14 @@ Built with a commitment to high engineering standards, Stamply follows **Domain-
 
 ## Getting Started
 
-1. **Install Dependencies:**
+1. **Spin up the Database:**
+   The project includes a `docker-compose.dev.yml` file to quickly set up a PostgreSQL instance for development.
+   ```bash
+   docker-compose -f docker-compose.dev.yml up -d
+   ```
+   This will start a PostgreSQL container with the default credentials (`postgres`/`postgres`) and database name (`stamply`) as configured in `appsettings.Development.json`.
+
+2. **Install Dependencies:**
 
    - For Husky (pre-commit hooks), run:
      ```bash

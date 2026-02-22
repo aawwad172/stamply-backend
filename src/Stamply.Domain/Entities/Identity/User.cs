@@ -1,19 +1,17 @@
-
-using Stamply.Domain.Entities.Authentication;
+using Stamply.Domain.Entities.Identity.Authentication;
 using Stamply.Domain.Interfaces.Domain.Auditing;
-namespace Stamply.Domain.Entities;
-
+using Stamply.Domain.ValueObjects;
+namespace Stamply.Domain.Entities.Identity;
 
 public class User : IBaseEntity
 {
     public required Guid Id { get; init; }
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
+    public required FullName FullName { get; set; }
     public required string Username { get; set; }
+    public virtual UserCredentials? Credentials { get; set; }
     public required string Email { get; set; }
-    public required string PasswordHash { get; set; }
-    public required DateTime CreatedAt { get; init; }
-    public required Guid CreatedBy { get; init; }
+    public DateTime CreatedAt { get; set; }
+    public Guid CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public Guid? UpdatedBy { get; set; }
     public required bool IsActive { get; set; }

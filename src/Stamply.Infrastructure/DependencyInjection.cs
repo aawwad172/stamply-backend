@@ -3,6 +3,7 @@ using Stamply.Application.Utilities;
 using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
 using Stamply.Infrastructure.Persistence;
+using Stamply.Infrastructure.Persistence.Interceptors;
 using Stamply.Infrastructure.Persistence.Repositories;
 
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,13 @@ public static class DependencyInjection
     {
         string connectionString = configuration.GetRequiredSetting("ConnectionStrings:DbConnectionString");
 
-        services.AddDbContext<ApplicationDbContext>((IServiceProvider provider, DbContextOptionsBuilder options) => options.UseNpgsql(connectionString));
+        services.AddScoped<AuditingInterceptor>();
+
+        services.AddDbContext<ApplicationDbContext>((IServiceProvider provider, DbContextOptionsBuilder options) => 
+        {
+            options.UseNpgsql(connectionString);
+            options.AddInterceptors(provider.GetRequiredService<AuditingInterceptor>());
+        });
         // Add your repositories like this here
         // services.AddScoped<IRepository, Repository>();
 

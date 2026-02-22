@@ -1,7 +1,7 @@
 using System.Security.Claims;
 
-using Stamply.Domain.Entities;
-using Stamply.Domain.Entities.Authentication;
+using Stamply.Domain.Entities.Identity;
+using Stamply.Domain.Entities.Identity.Authentication;
 
 namespace Stamply.Domain.Interfaces.Application.Services;
 
