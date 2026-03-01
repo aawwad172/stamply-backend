@@ -5,7 +5,6 @@ using Stamply.Domain;
 using Stamply.Infrastructure;
 using Stamply.Infrastructure.Persistence;
 using Stamply.Presentation.API;
-// using Stamply.Presentation.API.Configurations;
 using Stamply.Presentation.API.Middlewares;
 using Stamply.Presentation.API.Models;
 using Stamply.Presentation.API.Routes.Authentication;

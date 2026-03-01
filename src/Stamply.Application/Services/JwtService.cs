@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 
 using Stamply.Application.Utilities;
-using Stamply.Domain.Entities.Authentication;
 using Stamply.Domain.Exceptions;
 using Stamply.Domain.Interfaces.Application.Services;
 using Stamply.Domain.Interfaces.Infrastructure.IRepositories;
@@ -46,13 +45,6 @@ public class JwtService(
             // --- ADD SECURITY STAMP CLAIM HERE ---
             new("security_stamp", user.SecurityStamp)
         };
-
-        // --- 3. Add Role Claims ---
-        foreach (var role in roles)
-        {
-            // Add one claim for each role the user holds
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
 
         // Use the custom claim type defined earlier (CustomClaims.Permission = "application_permission")
         // --- 4. Add Permission Claims (for granular [HasPermission("...")] checks) ---

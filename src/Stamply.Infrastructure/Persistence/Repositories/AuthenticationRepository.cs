@@ -9,9 +9,9 @@ public class AuthenticationRepository(ApplicationDbContext dbContext) : IAuthent
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public async Task AddUserRoleAsync(UserRole userRole)
+    public async Task AddUserRoleAsync(UserRoleTenant userRole)
     {
-        await _dbContext.UserRoles.AddAsync(userRole);
+        await _dbContext.UserRoleTenants.AddAsync(userRole);
     }
 
     public async Task<List<string>> GetAllPermissionNamesAsync()
@@ -33,7 +33,7 @@ public class AuthenticationRepository(ApplicationDbContext dbContext) : IAuthent
 
     public async Task<List<Guid>> GetUserRoleIdsAsync(Guid userId)
     {
-        return await _dbContext.UserRoles
+        return await _dbContext.UserRoleTenants
                .Where(ur => ur.UserId == userId)
                .Select(ur => ur.RoleId)
                .ToListAsync();
@@ -41,7 +41,7 @@ public class AuthenticationRepository(ApplicationDbContext dbContext) : IAuthent
 
     public async Task<List<string>> GetUserRolesAsync(Guid userId)
     {
-        return await _dbContext.UserRoles
+        return await _dbContext.UserRoleTenants
                .Where(ur => ur.UserId == userId)
                .Select(ur => ur.Role!.Name) // EF Core translates this join efficiently
                .ToListAsync();
@@ -49,7 +49,7 @@ public class AuthenticationRepository(ApplicationDbContext dbContext) : IAuthent
 
     public async Task<bool> IsUserInRoleAsync(Guid userId, string roleName)
     {
-        return await _dbContext.UserRoles
+        return await _dbContext.UserRoleTenants
                 .AnyAsync(ur => ur.UserId == userId && ur.Role!.Name == roleName);
     }
 }

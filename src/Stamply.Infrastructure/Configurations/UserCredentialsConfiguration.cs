@@ -9,8 +9,6 @@ public class UserCredentialsConfiguration : IEntityTypeConfiguration<UserCredent
 {
     public void Configure(EntityTypeBuilder<UserCredentials> builder)
     {
-        builder.ToTable("UserCredentials");
-
         // Key
         builder.HasKey(c => c.Id);
 

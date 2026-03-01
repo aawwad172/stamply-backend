@@ -55,8 +55,6 @@ public class LoginCommandHandler(
 
             await _refreshTokenRepository.AddAsync(refreshToken);
 
-            user.RefreshTokens.Add(refreshToken);
-
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitAsync();
 

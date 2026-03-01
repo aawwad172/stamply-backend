@@ -2,7 +2,6 @@ using System.Reflection;
 using System.Text;
 
 using Stamply.Application.Utilities;
-using Stamply.Domain.Entities.Authentication;
 using Stamply.Domain.Enums;
 using Stamply.Presentation.API.Validators.Commands.Authentication;
 
@@ -10,6 +9,7 @@ using FluentValidation;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Stamply.Domain.Entities.Identity.Authentication;
 
 namespace Stamply.Presentation.API;
 

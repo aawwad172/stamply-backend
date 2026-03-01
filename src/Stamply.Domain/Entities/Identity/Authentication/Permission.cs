@@ -15,13 +15,13 @@ public class Permission : IBaseEntity
     /// Optional human description for admin UI.
     /// </summary>
     public string? Description { get; set; }
-
-    // Navigations
-    public ICollection<RolePermission> RolePermissions { get; set; } = [];
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public Guid? UpdatedBy { get; set; }
     public bool IsDeleted { get; set; } = false;
+
+    // Navigations
+    public ICollection<Role> Roles { get; set; } = [];
 }
 
