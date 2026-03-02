@@ -1,38 +1,37 @@
 using System.Reflection;
-using Stamply.Domain.Interfaces.Domain.Auditing;
-using Stamply.Infrastructure.Configurations;
-using Stamply.Infrastructure.Configurations.Seed;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.Entities.Identity.Authentication;
 using Stamply.Domain.Interfaces.Application.Services;
+using Stamply.Domain.Interfaces.Domain.Auditing;
+using Stamply.Infrastructure.Configurations;
+using Stamply.Infrastructure.Configurations.Seed;
 
 namespace Stamply.Infrastructure.Persistence;
 
 public class ApplicationDbContext(
     DbContextOptions<ApplicationDbContext> options,
-    IConfiguration configuration,
     ILogger<ApplicationDbContext> logger,
     ICurrentUserService currentUserService)
     : DbContext(options)
 {
-    private readonly IConfiguration _configuration = configuration;
     private readonly ILogger<ApplicationDbContext> _logger = logger;
     private readonly ICurrentUserService _currentUserService = currentUserService;
 
     // DbSet properties for the main entities and join tables
-    public DbSet<User> Users { get; set; }
-    public DbSet<UserCredentials> UserCredentials { get; set; }
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<Permission> Permissions { get; set; }
-    public DbSet<UserRoleTenant> UserRoleTenants { get; set; }
-    public DbSet<RolePermission> RolePermissions { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<UserCredentials> UserCredentials { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Permission> Permissions { get; set; } = null!;
+    public DbSet<UserRoleTenant> UserRoleTenants { get; set; } = null!;
+    public DbSet<RolePermission> RolePermissions { get; set; } = null!;
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -69,8 +68,12 @@ public class ApplicationDbContext(
         {
             if (entry.State == EntityState.Added && entry.Entity is ICreationAudit creationAudit)
             {
-                creationAudit.CreatedAt = utcNow;
-                creationAudit.CreatedBy = currentUserId;
+                if (creationAudit.CreatedAt == default)
+                    creationAudit.CreatedAt = utcNow;
+
+                if (creationAudit.CreatedBy == Guid.Empty
+                    && currentUserId != Guid.Empty)
+                    creationAudit.CreatedBy = currentUserId;
             }
 
             // Optional: If you have an interface for updates (e.g., IUpdateAudit)

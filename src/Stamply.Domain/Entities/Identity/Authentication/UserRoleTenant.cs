@@ -1,5 +1,3 @@
-using Stamply.Domain.Common;
-
 namespace Stamply.Domain.Entities.Identity.Authentication;
 
 public class UserRoleTenant

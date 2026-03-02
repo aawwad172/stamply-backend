@@ -24,9 +24,14 @@ public class UserRoleTenantConfiguration : IEntityTypeConfiguration<UserRoleTena
             .HasForeignKey(urt => urt.TenantId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Unique constraint to prevent a user from having the same role 
-        // in the same tenant twice
+        // Unique constraint for tenant-specific roles (excludes super admins)
         builder.HasIndex(urt => new { urt.UserId, urt.RoleId, urt.TenantId })
-                .IsUnique();
+            .IsUnique()
+            .HasFilter("\"TenantId\" IS NOT NULL");  // Only for tenant users
+
+        // Separate unique constraint for super admin roles (TenantId = NULL)
+        builder.HasIndex(urt => new { urt.UserId, urt.RoleId })
+            .IsUnique()
+            .HasFilter("\"TenantId\" IS NULL");  // Only for super admins
     }
 }

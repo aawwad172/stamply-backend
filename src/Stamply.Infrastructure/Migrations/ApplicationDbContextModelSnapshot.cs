@@ -63,8 +63,8 @@ namespace Stamply.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("55555555-5555-7555-8555-555555555555"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CreatedAt = new DateTime(2025, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = new Guid("a0000000-0000-7000-8000-000000000000"),
                             Description = "some description",
                             IsDeleted = false,
                             Name = "User.Read"
@@ -72,8 +72,8 @@ namespace Stamply.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("66666666-6666-7666-8666-666666666666"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            CreatedAt = new DateTime(2025, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = new Guid("a0000000-0000-7000-8000-000000000000"),
                             IsDeleted = false,
                             Name = "Post.Approve"
                         });
@@ -265,8 +265,13 @@ namespace Stamply.Infrastructure.Migrations
 
                     b.HasIndex("TenantId");
 
+                    b.HasIndex("UserId", "RoleId")
+                        .IsUnique()
+                        .HasFilter("\"TenantId\" IS NULL");
+
                     b.HasIndex("UserId", "RoleId", "TenantId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("\"TenantId\" IS NOT NULL");
 
                     b.ToTable("UserRoleTenants");
                 });

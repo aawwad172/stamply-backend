@@ -210,8 +210,8 @@ namespace Stamply.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Description", "IsDeleted", "Name", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { new Guid("55555555-5555-7555-8555-555555555555"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), "some description", false, "User.Read", null, null },
-                    { new Guid("66666666-6666-7666-8666-666666666666"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("00000000-0000-0000-0000-000000000000"), null, false, "Post.Approve", null, null }
+                    { new Guid("55555555-5555-7555-8555-555555555555"), new DateTime(2025, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("a0000000-0000-7000-8000-000000000000"), "some description", false, "User.Read", null, null },
+                    { new Guid("66666666-6666-7666-8666-666666666666"), new DateTime(2025, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("a0000000-0000-7000-8000-000000000000"), null, false, "Post.Approve", null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -296,10 +296,18 @@ namespace Stamply.Infrastructure.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserRoleTenants_UserId_RoleId",
+                table: "UserRoleTenants",
+                columns: new[] { "UserId", "RoleId" },
+                unique: true,
+                filter: "\"TenantId\" IS NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRoleTenants_UserId_RoleId_TenantId",
                 table: "UserRoleTenants",
                 columns: new[] { "UserId", "RoleId", "TenantId" },
-                unique: true);
+                unique: true,
+                filter: "\"TenantId\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

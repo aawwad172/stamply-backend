@@ -37,7 +37,7 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 
         // Regional Settings
         builder.Property(t => t.TimeZoneId)
-            .HasDefaultValue("Jordan Standard Time")
+            .HasDefaultValue("Asia/Amman")
             .HasMaxLength(50);
 
         builder.Property(t => t.CurrencyCode)

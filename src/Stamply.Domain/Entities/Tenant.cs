@@ -20,7 +20,7 @@ public class Tenant : IEntity, IBaseEntity
 
     // Operational
     public bool IsActive { get; set; } = true;
-    public string TimeZoneId { get; set; } = "Jordan Standard Time";
+    public string TimeZoneId { get; set; } = "Asia/Amman";
     public string CurrencyCode { get; set; } = "JOD";
 
     // Relationships
