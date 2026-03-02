@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+using Stamply.Domain.Entities;
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.Entities.Identity.Authentication;
 using Stamply.Domain.Interfaces.Application.Services;
@@ -33,6 +34,8 @@ public class ApplicationDbContext(
     public DbSet<RolePermission> RolePermissions { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
+    public DbSet<Tenant> Tenants { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -53,6 +56,8 @@ public class ApplicationDbContext(
         modelBuilder.ApplyConfiguration(new RolesPermissionsSeed());
         modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
         modelBuilder.ApplyConfiguration(new UserRoleTenantConfiguration());
+
+        modelBuilder.ApplyConfiguration(new TenantConfiguration());
     }
 
     // _logger service
