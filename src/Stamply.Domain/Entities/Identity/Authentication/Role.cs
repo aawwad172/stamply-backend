@@ -11,8 +11,8 @@ public class Role : IBaseEntity
     public string? Description { get; init; }
 
     // Navigations
-    public ICollection<UserRole> UserRoles { get; init; } = [];
-    public ICollection<RolePermission> RolePermissions { get; init; } = [];
+    public ICollection<UserRoleTenant> UserRoleTenants { get; set; } = [];
+    public ICollection<Permission> Permissions { get; set; } = [];
     public DateTime CreatedAt { get; set; }
     public Guid CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }

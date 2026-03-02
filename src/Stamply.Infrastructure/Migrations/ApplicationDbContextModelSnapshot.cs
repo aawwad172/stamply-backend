@@ -57,7 +57,7 @@ namespace Stamply.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
@@ -170,7 +170,7 @@ namespace Stamply.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -212,14 +212,9 @@ namespace Stamply.Infrastructure.Migrations
 
                     b.HasKey("PermissionId", "RoleId");
 
-                    b.HasIndex("PermissionId");
-
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("RoleId", "PermissionId")
-                        .IsUnique();
-
-                    b.ToTable("RolePermissions", (string)null);
+                    b.ToTable("RolePermissions");
 
                     b.HasData(
                         new
@@ -249,21 +244,36 @@ namespace Stamply.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.UserRole", b =>
+            modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.UserRoleTenant", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId", "RoleId");
+                    b.HasIndex("TenantId");
 
-                    b.ToTable("UserRoles", (string)null);
+                    b.HasIndex("UserId", "RoleId")
+                        .IsUnique()
+                        .HasFilter("\"TenantId\" IS NULL");
+
+                    b.HasIndex("UserId", "RoleId", "TenantId")
+                        .IsUnique()
+                        .HasFilter("\"TenantId\" IS NOT NULL");
+
+                    b.ToTable("UserRoleTenants");
                 });
 
             modelBuilder.Entity("Stamply.Domain.Entities.Identity.User", b =>
@@ -304,6 +314,9 @@ namespace Stamply.Infrastructure.Migrations
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("UserCredentialsId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -317,7 +330,7 @@ namespace Stamply.Infrastructure.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Stamply.Domain.Entities.Identity.UserCredentials", b =>
@@ -339,7 +352,85 @@ namespace Stamply.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserCredentials", (string)null);
+                    b.ToTable("UserCredentials");
+                });
+
+            modelBuilder.Entity("Stamply.Domain.Entities.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasDefaultValue("JOD");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LogoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PrimaryColor")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(7)
+                        .HasColumnType("character varying(7)")
+                        .HasDefaultValue("#000000");
+
+                    b.Property<string>("SecondaryColor")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(7)
+                        .HasColumnType("character varying(7)")
+                        .HasDefaultValue("#FFFFFF");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("Asia/Amman");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.RefreshToken", b =>
@@ -363,13 +454,13 @@ namespace Stamply.Infrastructure.Migrations
             modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.RolePermission", b =>
                 {
                     b.HasOne("Stamply.Domain.Entities.Identity.Authentication.Permission", "Permission")
-                        .WithMany("RolePermissions")
+                        .WithMany()
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Stamply.Domain.Entities.Identity.Authentication.Role", "Role")
-                        .WithMany("RolePermissions")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -379,21 +470,28 @@ namespace Stamply.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.UserRole", b =>
+            modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.UserRoleTenant", b =>
                 {
                     b.HasOne("Stamply.Domain.Entities.Identity.Authentication.Role", "Role")
-                        .WithMany("UserRoles")
+                        .WithMany("UserRoleTenants")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Stamply.Domain.Entities.Tenant", "Tenant")
+                        .WithMany("UserRoleTenants")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Stamply.Domain.Entities.Identity.User", "User")
-                        .WithMany("UserRoles")
+                        .WithMany("UserRoleTenants")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("User");
                 });
@@ -439,16 +537,9 @@ namespace Stamply.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
-                });
-
             modelBuilder.Entity("Stamply.Domain.Entities.Identity.Authentication.Role", b =>
                 {
-                    b.Navigation("RolePermissions");
-
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserRoleTenants");
                 });
 
             modelBuilder.Entity("Stamply.Domain.Entities.Identity.User", b =>
@@ -457,7 +548,12 @@ namespace Stamply.Infrastructure.Migrations
 
                     b.Navigation("RefreshTokens");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserRoleTenants");
+                });
+
+            modelBuilder.Entity("Stamply.Domain.Entities.Tenant", b =>
+                {
+                    b.Navigation("UserRoleTenants");
                 });
 #pragma warning restore 612, 618
         }

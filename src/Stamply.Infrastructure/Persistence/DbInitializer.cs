@@ -8,6 +8,7 @@ using Stamply.Domain.ValueObjects;
 using Stamply.Domain.Entities.Identity.Authentication;
 using Stamply.Infrastructure.Configurations.Seed;
 using Stamply.Application.Utilities;
+using Stamply.Domain.Interfaces.Application.Services;
 
 namespace Stamply.Infrastructure.Persistence;
 
@@ -23,6 +24,8 @@ public static class DbInitializer
             ApplicationDbContext? context = services.GetRequiredService<ApplicationDbContext>();
             IConfiguration? configuration = services.GetRequiredService<IConfiguration>();
 
+            ISecurityService securityService = services.GetRequiredService<ISecurityService>();
+
             // 1. Automatically apply any pending migrations
             if ((await context.Database.GetPendingMigrationsAsync()).Any())
             {
@@ -33,31 +36,36 @@ public static class DbInitializer
             if (!await context.Users.AnyAsync(u => u.Id == AuthSeedConstants.SystemUserId))
             {
                 Guid systemUserId = AuthSeedConstants.SystemUserId;
+                Guid credentialsId = Id.New();
+
                 User? systemUser = new()
                 {
                     Id = systemUserId,
                     FullName = new FullName { FirstName = "system", LastName = "system" },
                     Username = "system",
                     Email = "system@example.com",
+                    UserCredentialsId = credentialsId,
+                    // Credentials = superAdminCredentials,
+                    Credentials = new UserCredentials
+                    {
+                        Id = credentialsId,
+                        UserId = systemUserId,
+                        PasswordHash = securityService.HashSecret(configuration.GetRequiredSetting("Security:SuperAdminPassword"))
+                    },
                     SecurityStamp = AuthSeedConstants.SystemSecurityStampGuid,
                     IsActive = true,
                     IsVerified = true,
                     IsDeleted = false,
                     CreatedAt = AuthSeedConstants.SeedDateUtc,
                     CreatedBy = systemUserId,
-                    Credentials = new UserCredentials
-                    {
-                        Id = Id.New(),
-                        UserId = systemUserId,
-                        PasswordHash = configuration.GetRequiredSetting("Security:SystemAdminPasswordHash")
-                    }
                 };
 
                 context.Users.Add(systemUser);
-                
+
                 // Assign SuperAdmin role to system user
-                context.UserRoles.Add(new UserRole
+                context.UserRoleTenants.Add(new UserRoleTenant
                 {
+                    Id = Id.New(),
                     UserId = systemUserId,
                     RoleId = AuthSeedConstants.RoleIdSuperAdmin
                 });
@@ -67,14 +75,15 @@ public static class DbInitializer
             else
             {
                 // Ensure system user has the SuperAdmin role if it was created previously without it
-                bool hasRole = await context.UserRoles.AnyAsync(ur => 
-                    ur.UserId == AuthSeedConstants.SystemUserId && 
+                bool hasRole = await context.UserRoleTenants.AnyAsync(ur =>
+                    ur.UserId == AuthSeedConstants.SystemUserId &&
                     ur.RoleId == AuthSeedConstants.RoleIdSuperAdmin);
-                
+
                 if (!hasRole)
                 {
-                    context.UserRoles.Add(new UserRole
+                    context.UserRoleTenants.Add(new UserRoleTenant
                     {
+                        Id = Id.New(),
                         UserId = AuthSeedConstants.SystemUserId,
                         RoleId = AuthSeedConstants.RoleIdSuperAdmin
                     });

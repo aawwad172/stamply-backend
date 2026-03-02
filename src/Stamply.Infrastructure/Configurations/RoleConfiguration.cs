@@ -9,8 +9,6 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.ToTable("Roles");
-
         builder.HasKey(r => r.Id);
 
         builder.Property(r => r.Name)
@@ -23,18 +21,11 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder.Property(r => r.Description)
             .HasMaxLength(256);
 
-        // Navigations (inverse sides configured on the other entities too)
-        builder.HasMany(r => r.UserRoles)
-            .WithOne(ur => ur.Role)
-            .HasForeignKey(ur => ur.RoleId)
-            .OnDelete(DeleteBehavior.Restrict); // prevent accidental cascade when deleting a Role
-
-        builder.HasMany(r => r.RolePermissions)
-            .WithOne(rp => rp.Role)
-            .HasForeignKey(rp => rp.RoleId)
-            .OnDelete(DeleteBehavior.Cascade); // safe to remove role-permission links when a role is deleted
-
         builder.Property(r => r.UpdatedAt).IsRequired(false);
         builder.Property(r => r.UpdatedBy).IsRequired(false);
+
+        builder.HasMany(r => r.Permissions)
+                .WithMany(p => p.Roles)
+                .UsingEntity<RolePermission>();
     }
 }

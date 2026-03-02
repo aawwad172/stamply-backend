@@ -1,34 +1,40 @@
 using System.Reflection;
-using Stamply.Domain.Interfaces.Domain.Auditing;
-using Stamply.Infrastructure.Configurations;
-using Stamply.Infrastructure.Configurations.Seed;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+
+using Stamply.Domain.Entities;
 using Stamply.Domain.Entities.Identity;
 using Stamply.Domain.Entities.Identity.Authentication;
+using Stamply.Domain.Interfaces.Application.Services;
+using Stamply.Domain.Interfaces.Domain.Auditing;
+using Stamply.Infrastructure.Configurations;
+using Stamply.Infrastructure.Configurations.Seed;
 
 namespace Stamply.Infrastructure.Persistence;
 
 public class ApplicationDbContext(
     DbContextOptions<ApplicationDbContext> options,
-    IConfiguration configuration,
-    ILogger<ApplicationDbContext> logger)
+    ILogger<ApplicationDbContext> logger,
+    ICurrentUserService currentUserService)
     : DbContext(options)
 {
-    private readonly IConfiguration _configuration = configuration;
     private readonly ILogger<ApplicationDbContext> _logger = logger;
+    private readonly ICurrentUserService _currentUserService = currentUserService;
+
     // DbSet properties for the main entities and join tables
-    public DbSet<User> Users { get; set; }
-    public DbSet<UserCredentials> UserCredentials { get; set; }
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<Permission> Permissions { get; set; }
-    public DbSet<UserRole> UserRoles { get; set; }
-    public DbSet<RolePermission> RolePermissions { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<UserCredentials> UserCredentials { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Permission> Permissions { get; set; } = null!;
+    public DbSet<UserRoleTenant> UserRoleTenants { get; set; } = null!;
+    public DbSet<RolePermission> RolePermissions { get; set; } = null!;
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+
+    public DbSet<Tenant> Tenants { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,13 +53,11 @@ public class ApplicationDbContext(
         modelBuilder.ApplyConfiguration(new PermissionsSeed());
 
         // Apply relationship configurations last
-        modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
-
-        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         modelBuilder.ApplyConfiguration(new RolesPermissionsSeed());
-
         modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+        modelBuilder.ApplyConfiguration(new UserRoleTenantConfiguration());
 
+        modelBuilder.ApplyConfiguration(new TenantConfiguration());
     }
 
     // _logger service
@@ -61,6 +65,29 @@ public class ApplicationDbContext(
     {
         // Log database changes before saving
         LogChanges();
+
+        var utcNow = DateTime.UtcNow;
+        var currentUserId = _currentUserService.UserId;
+
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            if (entry.State == EntityState.Added && entry.Entity is ICreationAudit creationAudit)
+            {
+                if (creationAudit.CreatedAt == default)
+                    creationAudit.CreatedAt = utcNow;
+
+                if (creationAudit.CreatedBy == Guid.Empty
+                    && currentUserId != Guid.Empty)
+                    creationAudit.CreatedBy = currentUserId;
+            }
+
+            // Optional: If you have an interface for updates (e.g., IUpdateAudit)
+            if (entry.State == EntityState.Modified && entry.Entity is IModificationAudit updateAudit)
+            {
+                updateAudit.UpdatedAt = utcNow;
+                updateAudit.UpdatedBy = currentUserId;
+            }
+        }
 
         int result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 
