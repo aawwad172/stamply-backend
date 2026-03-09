@@ -25,6 +25,21 @@
 - [x] Task: Conductor - User Manual Verification 'Infrastructure Layer Update' (Protocol in workflow.md) [41b682c]
 
 ## Phase 4: Final Verification
-- [ ] Task: Build the solution to ensure no compilation errors
-- [ ] Task: Verify that all permissions are correctly seeded (manually or via a script)
-- [ ] Task: Conductor - User Manual Verification 'Final Verification' (Protocol in workflow.md)
+- [x] Task: Build the solution to ensure no compilation errors [98c0598]
+- [x] Task: Verify that all permissions are correctly seeded (manually or via a script) [98c0598]
+- [x] Task: Conductor - User Manual Verification 'Final Verification' (Protocol in workflow.md) [41b682c]
+
+## Phase 5: Super Admin Permissions
+- [x] Task: Define Super Admin permission constants in `PermissionConstants.cs` [e80ffdf]
+    - [x] Add `System.Manage`, `System.Logs.View`, `System.Audit.View`, `System.Settings.Edit`, `Tenants.Manage` [e80ffdf]
+- [x] Task: Generate and add GUIDs for Super Admin permissions in `AuthSeedConstants.cs` [8f1f13f]
+- [x] Task: Update `PermissionsSeed.cs` with Super Admin permissions [08927df]
+- [x] Task: Conductor - User Manual Verification 'Super Admin Permissions' (Protocol in workflow.md) [41b682c]
+
+## Phase 6: Roles and Permission Assignments [checkpoint: 72e2416]
+- [x] Task: Create `RolesEnum` in Domain layer [db8bfe5]
+    - [x] Add `SuperAdmin`, `TenantAdmin`, `Merchant`, `User` [db8bfe5]
+- [x] Task: Update `AuthSeedConstants.cs` with new Role GUIDs (v7) [db8bfe5]
+- [x] Task: Update `RolesSeed.cs` with project-specific roles [db8bfe5]
+- [x] Task: Update `RolesPermissionsSeeding.cs` with role-permission mappings [db8bfe5]
+- [x] Task: Conductor - User Manual Verification 'Roles and Assignments' (Protocol in workflow.md) [72e2416]
