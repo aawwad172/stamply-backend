@@ -56,6 +56,13 @@ public static class AuthSeedConstants
     public static readonly Guid PermissionIdScanStamping = new("019cd45e-7cfc-78ba-b9fc-d69399cdc202");
     public static readonly Guid PermissionIdScanRedeem = new("019cd45e-7cfc-735f-ac03-e6b5ebe67f6e");
 
+    // Super Admin
+    public static readonly Guid PermissionIdSystemManage = new("019cd465-18f5-7e38-951f-99444e306980");
+    public static readonly Guid PermissionIdSystemLogsView = new("019cd465-18ff-7956-a606-0c8f350e2330");
+    public static readonly Guid PermissionIdSystemAuditView = new("019cd465-18ff-7481-be6f-34e04e75f169");
+    public static readonly Guid PermissionIdSystemSettingsEdit = new("019cd465-18ff-77ba-b57f-2026a084e84a");
+    public static readonly Guid PermissionIdTenantsManage = new("019cd465-18ff-733b-9eed-eaadb6650b4c");
+
     public static readonly DateTime SeedDateUtc = new(2025, 10, 15, 0, 0, 0, DateTimeKind.Utc);
 
 }
