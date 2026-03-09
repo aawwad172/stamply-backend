@@ -7,15 +7,15 @@
     - [x] Remove `PermissionIdUserRead` and `PermissionIdPostApprove` from `AuthSeedConstants.cs` [12e4baf]
 - [x] Task: Conductor - User Manual Verification 'Cleanup and Preparation' (Protocol in workflow.md) [c3098d3]
 
-## Phase 2: Domain Layer Update
-- [ ] Task: Define new permission string constants in `PermissionConstants.cs`
-    - [ ] Add `Tenants.View`, `Tenants.Add`, `Tenants.Edit`, `Tenants.Delete`
-    - [ ] Add `Users.View`, `Users.Add`, `Users.Edit`, `Users.Delete`
-    - [ ] Add `Invitations.View`, `Invitations.Add`, `Invitations.Edit`, `Invitations.Delete`
-    - [ ] Add `Cards.View`, `Cards.Add`, `Cards.Edit`, `Cards.Delete`
-    - [ ] Add `Rewards.View`, `Rewards.Add`, `Rewards.Edit`, `Rewards.Delete`
-    - [ ] Add `Scan.Stamping`, `Scan.Redeem`
-- [ ] Task: Conductor - User Manual Verification 'Domain Layer Update' (Protocol in workflow.md)
+## Phase 2: Domain Layer Update [checkpoint: fd64a64]
+- [x] Task: Define new permission string constants in `PermissionConstants.cs` [8b136f9]
+    - [x] Add `Tenants.View`, `Tenants.Add`, `Tenants.Edit`, `Tenants.Delete` [8b136f9]
+    - [x] Add `Users.View`, `Users.Add`, `Users.Edit`, `Users.Delete` [8b136f9]
+    - [x] Add `Invitations.View`, `Invitations.Add`, `Invitations.Edit`, `Invitations.Delete` [8b136f9]
+    - [x] Add `Cards.View`, `Cards.Add`, `Cards.Edit`, `Cards.Delete` [8b136f9]
+    - [x] Add `Rewards.View`, `Rewards.Add`, `Rewards.Edit`, `Rewards.Delete` [8b136f9]
+    - [x] Add `Scan.Stamping`, `Scan.Redeem` [8b136f9]
+- [x] Task: Conductor - User Manual Verification 'Domain Layer Update' (Protocol in workflow.md) [fd64a64]
 
 ## Phase 3: Infrastructure Layer Update
 - [ ] Task: Generate and add new Version 7 GUIDs to `AuthSeedConstants.cs`
