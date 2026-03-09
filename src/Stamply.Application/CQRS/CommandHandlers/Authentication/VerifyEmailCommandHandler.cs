@@ -37,8 +37,8 @@ public class VerifyEmailCommandHandler(
         if (token is null)
             throw new NotFoundException($"Token {request.Token} is not available");
 
-        if (token.IsUsed || token.ExpiryDate < DateTime.Now || token.Type != UserTokenType.EmailVerification)
-            throw new InvalidTokenException("Toekn is used or expired");
+        if (token.IsUsed || token.ExpiryDate < DateTime.UtcNow || token.Type != UserTokenType.EmailVerification)
+            throw new InvalidTokenException("Token is used or expired");
 
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
@@ -57,8 +57,8 @@ public class VerifyEmailCommandHandler(
             await _refreshTokenRepository.AddAsync(refreshtoken);
 
 
-            await _unitOfWork.CommitAsync(cancellationToken);
             await _unitOfWork.SaveAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return new VerifyEmailCommandResult(AccessToken: accessToken, RefreshToken: refreshtoken.PlaintextToken);
         }

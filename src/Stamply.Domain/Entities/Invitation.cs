@@ -7,7 +7,8 @@ public class Invitation : IBaseEntity
 {
     public Guid Id { get; init; }
     public required string Email { get; set; }
-    public required string Token { get; set; }
+    public required string Token { get; set; } // <--- NOT MAPPED TO DB
+    public required string TokenHash { get; set; } // <--- STORED IN DB
 
     // For a new signup, this is NULL until the Tenant is created in Phase 2
     // For an employee invite, this would be set by the Tenant Admin

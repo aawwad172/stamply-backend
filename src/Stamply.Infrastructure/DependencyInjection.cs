@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Mail;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -57,12 +54,7 @@ public static class DependencyInjection
         services
             .AddFluentEmail(emailSettings.DefaultFrom)
             .AddRazorRenderer(typeof(EmailService))
-            .AddSmtpSender(new SmtpClient(emailSettings.SmtpServer)
-            {
-                Port = emailSettings.Port,
-                Credentials = new NetworkCredential(emailSettings.Username, emailSettings.Password),
-                EnableSsl = emailSettings.EnableSsl,
-            });
+            .AddSmtpSender(emailSettings.SmtpServer, emailSettings.Port, emailSettings.Username, emailSettings.Password);
 
         return services;
     }
