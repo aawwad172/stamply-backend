@@ -3,7 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using Stamply.Application.CQRS.CommandHandlers.Authentication;
-using Stamply.Application.CQRS.QueryHandlers.Authentication;
+using Stamply.Application.CQRS.CommandHandlers.Users;
+using Stamply.Application.CQRS.QueryHandlers.Users;
 using Stamply.Application.Services;
 using Stamply.Domain.Interfaces.Application.Services;
 
