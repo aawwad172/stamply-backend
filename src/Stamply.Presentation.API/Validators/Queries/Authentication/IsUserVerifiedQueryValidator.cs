@@ -9,6 +9,7 @@ public class IsUserVerifiedQueryValidator : AbstractValidator<IsUserVerifiedQuer
     public IsUserVerifiedQueryValidator()
     {
         RuleFor(x => x.UserId)
-            .NotEmpty();
+            .NotEmpty()
+            .WithMessage("User Id is required");
     }
 }

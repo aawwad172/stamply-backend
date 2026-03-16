@@ -10,10 +10,10 @@ public class VerifyEmailCommandValidator : AbstractValidator<VerifyEmailCommand>
     {
         RuleFor(x => x.UserId)
             .NotEmpty()
-            .NotNull();
+            .WithMessage("User Id is required");
 
         RuleFor(x => x.Token)
-            .NotNull()
-            .NotEmpty();
+            .NotEmpty()
+            .WithMessage("Token is required");
     }
 }

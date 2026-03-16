@@ -26,25 +26,25 @@ public class ValidateInvitationQueryHandler(
 
         try
         {
-            Invitation? inviation = await _invitationRepository.GetInvitationByTokenHashAsync(tokenHash);
+            Invitation? invitation = await _invitationRepository.GetInvitationByTokenHashAsync(tokenHash);
 
-            if (inviation is null)
+            if (invitation is null)
                 throw new NotFoundException($"Invitation with token not found");
 
-            if (inviation.IsUsed)
+            if (invitation.IsUsed)
                 throw new InvitationExpiredException($"Invitation with token already used");
 
-            if (inviation.ExpiresAt < DateTime.UtcNow)
+            if (invitation.ExpiresAt < DateTime.UtcNow)
                 throw new InvitationExpiredException($"Invitation with token expired");
 
-            if (inviation.Tenant is null)
-                throw new NotFoundException($"The tenant with Id: {inviation.TenantId} does not exist.");
+            if (invitation.Tenant is null)
+                throw new NotFoundException($"The tenant with Id: {invitation.TenantId} does not exist.");
 
-            if (inviation.Role is null)
-                throw new NotFoundException($"The role with Id: {inviation.RoleId} does not exist.");
+            if (invitation.Role is null)
+                throw new NotFoundException($"The role with Id: {invitation.RoleId} does not exist.");
 
 
-            return new ValidateInvitationQueryResult(Email: inviation.Email, TenantName: inviation.Tenant.BusinessName, RoleName: inviation.Role.Name);
+            return new ValidateInvitationQueryResult(Email: invitation.Email, TenantName: invitation.Tenant.BusinessName, RoleName: invitation.Role.Name);
 
         }
         catch (Exception ex)

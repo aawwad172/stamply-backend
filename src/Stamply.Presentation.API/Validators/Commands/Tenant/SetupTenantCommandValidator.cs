@@ -9,12 +9,13 @@ public class SetupTenantCommandValidator : AbstractValidator<SetupTenantCommand>
     public SetupTenantCommandValidator()
     {
         RuleFor(x => x.BusinessEmail)
-            .EmailAddress()
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Business Email is required")
+            .EmailAddress()
+            .WithMessage("A valid Business Email is required");
 
         RuleFor(x => x.CompanyName)
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Tenant Name is required");
     }
 }

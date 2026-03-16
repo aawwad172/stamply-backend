@@ -8,13 +8,25 @@ public class AcceptInvitationCommandValidator : AbstractValidator<AcceptInvitati
 {
     public AcceptInvitationCommandValidator()
     {
-        RuleFor(x => x.FullName.FirstName)
-            .NotEmpty()
-            .WithMessage("First name is required.");
+        RuleFor(x => x.FullName)
+            .NotNull()
+            .WithMessage("Full name is required.");
 
-        RuleFor(x => x.FullName.LastName)
-            .NotEmpty()
-            .WithMessage("Last name is required.");
+        When(x => x.FullName != null, () =>
+        {
+            RuleFor(x => x.FullName.FirstName)
+                .NotEmpty()
+                .WithMessage("First name is required.");
+
+            RuleFor(x => x.FullName.MiddleName)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Middle name is required");
+
+            RuleFor(x => x.FullName.LastName)
+                .NotEmpty()
+                .WithMessage("Last name is required.");
+        });
 
         RuleFor(x => x.Username)
             .Cascade(CascadeMode.Stop)
@@ -38,6 +50,6 @@ public class AcceptInvitationCommandValidator : AbstractValidator<AcceptInvitati
 
         RuleFor(x => x.Token)
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Token is required.");
     }
 }

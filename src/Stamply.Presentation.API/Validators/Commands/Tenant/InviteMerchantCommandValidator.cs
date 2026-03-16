@@ -10,13 +10,15 @@ public class InviteMerchantCommandValidator : AbstractValidator<InviteMerchantCo
     public InviteMerchantCommandValidator()
     {
         RuleFor(x => x.Email)
-            .EmailAddress()
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Email is required")
+            .EmailAddress()
+            .WithMessage("A valid email address is required");
 
         RuleFor(x => x.Role)
-            .NotNull()
             .NotEmpty()
-            .IsInEnum();
+            .WithMessage("Role is required")
+            .IsInEnum()
+            .WithMessage("Valid role is required");
     }
 }

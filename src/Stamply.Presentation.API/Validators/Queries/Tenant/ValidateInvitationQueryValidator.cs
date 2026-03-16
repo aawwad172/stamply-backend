@@ -12,6 +12,6 @@ public class ValidateInvitationQueryValidator : AbstractValidator<ValidateInvita
     {
         RuleFor(x => x.Token)
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Token is required");
     }
 }

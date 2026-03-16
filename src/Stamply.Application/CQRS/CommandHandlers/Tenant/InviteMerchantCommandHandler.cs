@@ -115,7 +115,7 @@ public class InviteMerchantCommandHandler(
         }
         catch (Exception ex)
         {
-            logger.LogError("An error occurred during merchant invitation: {Message}", ex.Message);
+            _logger.LogError("An error occurred during merchant invitation: {Message}", ex.Message);
             await _unitOfWork.RollbackAsync(cancellationToken);
             throw;
         }
