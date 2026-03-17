@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{342EDB7A-ED24-4DD9-822C-9374321A8CC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stambat.WebAPI", "src\Stambat.Presentation.API\Stambat.WebAPI.csproj", "{8F345AF8-127D-4E6E-83BE-0CB29263FF41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stambat.WebAPI", "src\Stambat.WebAPI\Stambat.WebAPI.csproj", "{8F345AF8-127D-4E6E-83BE-0CB29263FF41}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stambat.Application", "src\Stambat.Application\Stambat.Application.csproj", "{2BACEB28-B32A-4D49-868F-D452F527FE5E}"
 EndProject
