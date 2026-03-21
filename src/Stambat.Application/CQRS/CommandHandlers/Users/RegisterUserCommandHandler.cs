@@ -58,14 +58,7 @@ public class RegisterUserCommandHandler(
         string securityStamp = Id.New().ToString();
 
         Guid id = Id.New();
-
-        UserCredentials userCreds = new()
-        {
-            Id = Id.New(),
-            UserId = id,
-            PasswordHash = hashedPassword
-
-        };
+        UserCredentials userCreds = UserCredentials.Create(Id.New(), id, hashedPassword);
 
         Role? defaultRole = await _roleRepository.GetRoleByNameAsync(_defaultRole.ToString());
 
@@ -75,23 +68,16 @@ public class RegisterUserCommandHandler(
             throw new InvalidOperationException($"The default role '{_defaultRole}' does not exist in the database. Please seed roles.");
         }
 
-        UserEntity user = new()
-        {
-            Id = id,
-            FullName = new FullName
-            {
-                FirstName = request.FirstName,
-                MiddleName = request.MiddleName,
-                LastName = request.LastName
-            },
-            Email = request.Email,
-            Username = request.Username,
-            IsActive = true,
-            IsDeleted = false,
-            IsVerified = false,
-            SecurityStamp = securityStamp,
-            UserCredentialsId = userCreds.Id
-        };
+        UserEntity user = UserEntity.Create(
+            id,
+            FullName.Create(request.FirstName, request.LastName, request.MiddleName),
+            request.Username,
+            Email.Create(request.Email),
+            securityStamp,
+            id // Self-created
+        );
+
+        user.SetCredentials(userCreds);
 
         await _unitOfWork.BeginTransactionAsync();
         try
@@ -99,26 +85,23 @@ public class RegisterUserCommandHandler(
             await _userCredentialsRepository.AddAsync(userCreds);
             await _userRepository.AddAsync(user);
 
-            UserRoleTenant userRoleTenant = new()
-            {
-                Id = Id.New(),
-                UserId = user.Id,
-                RoleId = defaultRole.Id,
-                TenantId = null // Null until he enters his business data
-            };
+            UserRoleTenant userRoleTenant = UserRoleTenant.Create(
+                Id.New(),
+                user.Id,
+                defaultRole.Id,
+                null // Null until he enters his business data
+            );
 
             await _authenticationRepository.AddUserRoleTenantAsync(userRoleTenant);
 
             string verificationToken = Id.New().ToString("N");
-            UserToken userToken = new()
-            {
-                Id = Id.New(),
-                UserId = user.Id,
-                Token = verificationToken,
-                Type = UserTokenType.EmailVerification,
-                ExpiryDate = DateTime.UtcNow.AddHours(24),
-                IsUsed = false
-            };
+            UserToken userToken = UserToken.Create(
+                Id.New(),
+                user.Id,
+                verificationToken,
+                UserTokenType.EmailVerification,
+                DateTime.UtcNow.AddHours(24)
+            );
 
             await _userTokenRepository.AddAsync(userToken);
 

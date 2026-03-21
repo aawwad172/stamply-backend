@@ -8,6 +8,7 @@ using Stambat.Domain.Exceptions;
 using Stambat.Domain.Interfaces.Application.Services;
 using Stambat.Domain.Interfaces.Infrastructure.IEmail;
 using Stambat.Domain.Interfaces.Infrastructure.IRepositories;
+using Stambat.Domain.ValueObjects;
 
 
 namespace Stambat.Application.CQRS.CommandHandlers.Invitations;
@@ -59,7 +60,7 @@ public class AcceptInvitationCommandHandler(
             throw new NotFoundException($"The tenant with Id: {invitation.TenantId} does not exist.");
         }
 
-        invitation.IsUsed = true;
+        invitation.MarkAsUsed();
 
         // 2. Business Logic: Existing User Handling
         User? user = await _userRepository.GetUserByEmailAsync(invitation.Email);
@@ -85,37 +86,30 @@ public class AcceptInvitationCommandHandler(
 
                 Guid id = Id.New();
 
-                UserCredentials userCreds = new()
-                {
-                    Id = Id.New(),
-                    UserId = id,
-                    PasswordHash = hashedPassword
+                UserCredentials userCreds = UserCredentials.Create(Id.New(), id, hashedPassword);
 
-                };
+                user = User.Create(
+                    id,
+                    request.FullName,
+                    request.Username,
+                    Email.Create(invitation.Email),
+                    securityStamp,
+                    id, // Self-created
+                    isVerified: true
+                );
 
-                user = new()
-                {
-                    Id = id,
-                    FullName = request.FullName,
-                    Email = invitation.Email,
-                    Username = request.Username,
-                    IsActive = true,
-                    IsDeleted = false,
-                    IsVerified = true,
-                    SecurityStamp = securityStamp,
-                    UserCredentialsId = userCreds.Id
-                };
+                user.SetCredentials(userCreds);
+
                 await _userCredentialsRepository.AddAsync(userCreds);
                 await _userRepository.AddAsync(user);
             }
 
-            UserRoleTenant userRoleTenant = new()
-            {
-                Id = Id.New(),
-                UserId = user!.Id,
-                RoleId = invitation.RoleId,
-                TenantId = invitation.TenantId
-            };
+            UserRoleTenant userRoleTenant = UserRoleTenant.Create(
+                Id.New(),
+                user!.Id,
+                invitation.RoleId,
+                invitation.TenantId
+            );
 
             await _authenticationRepository.AddUserRoleTenantAsync(userRoleTenant);
 

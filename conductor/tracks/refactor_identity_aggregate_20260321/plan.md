@@ -1,17 +1,17 @@
 # Implementation Plan: Refactor Identity Aggregate to Rich Domain Model
 
 ## Phase 1: Value Objects and Core Aggregate Foundation
-1.  - [ ] Task: Implement Value Objects
-    - [ ] Create `FullName` value object in `Stambat.Domain.ValueObjects`.
-    - [ ] Create `Email` value object in `Stambat.Domain.ValueObjects`.
-    - [ ] Ensure validation (not empty, trim, lowercase) is implemented in both.
-2.  - [ ] Task: Update User Entity for Value Objects
-    - [ ] Update `User.cs` to use `FullName` and `Email` types for its properties.
-    - [ ] Update EF Core configurations in `Stambat.Infrastructure` to map these value objects (using `HasConversion` or similar).
-3.  - [ ] Task: Encapsulate User Entity State
-    - [ ] Make all property setters `private` or `init` in `User.cs`.
-    - [ ] Remove public constructors and implement `public static User Create(...)`.
-    - [ ] Ensure related entities (`RefreshToken`, `UserToken`, `UserRoleTenant`) also have encapsulated state and restricted constructors.
+1.  - [x] Task: Implement Value Objects
+    - [x] Create `FullName` value object in `Stambat.Domain.ValueObjects`.
+    - [x] Create `Email` value object in `Stambat.Domain.ValueObjects`.
+    - [x] Ensure validation (not empty, trim, lowercase) is implemented in both.
+2.  - [x] Task: Update User Entity for Value Objects
+    - [x] Update `User.cs` to use `FullName` and `Email` types for its properties.
+    - [x] Update EF Core configurations in `Stambat.Infrastructure` to map these value objects (using `HasConversion` or similar).
+3.  - [x] Task: Encapsulate User Entity State
+    - [x] Make all property setters `private` or `init` in `User.cs`.
+    - [x] Remove public constructors and implement `public static User Create(...)`.
+    - [x] Ensure related entities (`RefreshToken`, `UserToken`, `UserRoleTenant`) also have encapsulated state and restricted constructors.
 4.  - [ ] Task: Conductor - User Manual Verification 'Phase 1: Value Objects and Core Aggregate Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Domain Logic Implementation

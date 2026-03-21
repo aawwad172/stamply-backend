@@ -56,8 +56,7 @@ public class LogoutCommandHandler(
 
 
             // 3. --- Revoke and Audit ---
-            token.RevokedAt = DateTime.UtcNow;
-            token.ReasonRevoked = "Manual Logout";
+            token.Revoke("Manual Logout");
 
             User? user = await _userRepository.GetByIdAsync(_currentUser.UserId);
 
@@ -69,7 +68,7 @@ public class LogoutCommandHandler(
             // The next time an active Access Token is presented, the SecurityStamp check
             // in the JwtService.ValidateToken method will fail.
             // --------------------------------------------------------------------------
-            user.SecurityStamp = Id.New().ToString();
+            user.UpdateSecurityStamp();
 
 
             // Update the token entity in the repository.

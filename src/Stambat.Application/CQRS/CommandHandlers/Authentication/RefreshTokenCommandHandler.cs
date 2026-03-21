@@ -45,9 +45,7 @@ public class RefreshTokenCommandHandler(
             //  Generate a new refresh token
             RefreshToken newRefreshToken = _jwtService.CreateRefreshTokenEntity(user, oldToken.TokenFamilyId);
 
-            oldToken.RevokedAt = DateTime.UtcNow;
-            oldToken.ReasonRevoked = "Rotated";
-            oldToken.ReplacedByTokenId = newRefreshToken.Id; // CRITICAL: Link to the new token ID
+            oldToken.Revoke("Rotated", newRefreshToken.Id);
 
             _refreshTokenRepository.Update(oldToken);
 

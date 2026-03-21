@@ -55,27 +55,24 @@ public class SetupTenantCommandHandler(
             throw new InvalidOperationException($"The TenantAdmin role '{_tenantAdminRole}' does not exist in the database. Please seed roles.");
 
         Guid tenantId = Id.New();
-        TenantEntity tenant = new()
-        {
-            Id = tenantId,
-            BusinessName = request.CompanyName,
-            Email = request.BusinessEmail,
-            IsActive = true,
-            IsDeleted = false
-        };
+        TenantEntity tenant = TenantEntity.Create(
+            tenantId,
+            request.CompanyName,
+            request.BusinessEmail,
+            user.Id
+        );
 
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
             await _tenantRepository.AddAsync(tenant);
 
-            UserRoleTenant userRoleTenant = new()
-            {
-                Id = Id.New(),
-                UserId = user.Id,
-                RoleId = tenantAdminRole.Id,
-                TenantId = tenantId
-            };
+            UserRoleTenant userRoleTenant = UserRoleTenant.Create(
+                Id.New(),
+                user.Id,
+                tenantAdminRole.Id,
+                tenantId
+            );
 
             await _authenticationRepository.AddUserRoleTenantAsync(userRoleTenant);
 

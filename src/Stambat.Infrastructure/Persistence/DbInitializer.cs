@@ -1,14 +1,14 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
+using Stambat.Application.Utilities;
 using Stambat.Domain.Common;
 using Stambat.Domain.Entities.Identity;
-using Stambat.Domain.ValueObjects;
 using Stambat.Domain.Entities.Identity.Authentication;
-using Stambat.Infrastructure.Configurations.Seed;
-using Stambat.Application.Utilities;
 using Stambat.Domain.Interfaces.Application.Services;
+using Stambat.Domain.ValueObjects;
+using Stambat.Infrastructure.Configurations.Seed;
 
 namespace Stambat.Infrastructure.Persistence;
 
@@ -38,37 +38,33 @@ public static class DbInitializer
                 Guid systemUserId = AuthSeedConstants.SystemUserId;
                 Guid credentialsId = Id.New();
 
-                User? systemUser = new()
-                {
-                    Id = systemUserId,
-                    FullName = new FullName { FirstName = "system", LastName = "system" },
-                    Username = "system",
-                    Email = "system@example.com",
-                    UserCredentialsId = credentialsId,
-                    // Credentials = superAdminCredentials,
-                    Credentials = new UserCredentials
-                    {
-                        Id = credentialsId,
-                        UserId = systemUserId,
-                        PasswordHash = securityService.HashSecret(configuration.GetRequiredSetting("Security:SuperAdminPassword"))
-                    },
-                    SecurityStamp = AuthSeedConstants.SystemSecurityStampGuid,
-                    IsActive = true,
-                    IsVerified = true,
-                    IsDeleted = false,
-                    CreatedAt = AuthSeedConstants.SeedDateUtc,
-                    CreatedBy = systemUserId,
-                };
+                User? systemUser = User.Create(
+                    systemUserId,
+                    FullName.Create("system", "system"),
+                    "system",
+                    Stambat.Domain.ValueObjects.Email.Create("system@example.com"),
+                    AuthSeedConstants.SystemSecurityStampGuid,
+                    systemUserId,
+                    isVerified: true);
+
+                systemUser.CreatedAt = AuthSeedConstants.SeedDateUtc;
+
+                UserCredentials credentials = UserCredentials.Create(
+                    credentialsId,
+                    systemUserId,
+                    securityService.HashSecret(configuration.GetRequiredSetting("Security:SuperAdminPassword"))
+                );
+
+                systemUser.SetCredentials(credentials);
 
                 context.Users.Add(systemUser);
 
                 // Assign SuperAdmin role to system user
-                context.UserRoleTenants.Add(new UserRoleTenant
-                {
-                    Id = Id.New(),
-                    UserId = systemUserId,
-                    RoleId = AuthSeedConstants.RoleIdSuperAdmin
-                });
+                context.UserRoleTenants.Add(UserRoleTenant.Create(
+                    Id.New(),
+                    systemUserId,
+                    AuthSeedConstants.RoleIdSuperAdmin
+                ));
 
                 await context.SaveChangesAsync();
             }
@@ -81,12 +77,11 @@ public static class DbInitializer
 
                 if (!hasRole)
                 {
-                    context.UserRoleTenants.Add(new UserRoleTenant
-                    {
-                        Id = Id.New(),
-                        UserId = AuthSeedConstants.SystemUserId,
-                        RoleId = AuthSeedConstants.RoleIdSuperAdmin
-                    });
+                    context.UserRoleTenants.Add(UserRoleTenant.Create(
+                        Id.New(),
+                        AuthSeedConstants.SystemUserId,
+                        AuthSeedConstants.RoleIdSuperAdmin
+                    ));
                     await context.SaveChangesAsync();
                 }
             }

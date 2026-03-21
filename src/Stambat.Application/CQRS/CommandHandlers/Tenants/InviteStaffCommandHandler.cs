@@ -72,16 +72,16 @@ public class InviteStaffCommandHandler(
         // Hash the token for DB storage (one-way hash lSHA256)
         string hashedToken = _securityService.HashToken(rawToken);
 
-        Invitation invitation = new()
-        {
-            Id = Id.New(),
-            Email = request.Email,
-            RoleId = role.Id,
-            TenantId = validTenantId,
-            TokenHash = hashedToken,
-            ExpiresAt = DateTime.UtcNow.AddDays(_invitationExpiresAfter),
-            IsUsed = false,
-        };
+        Invitation invitation = Invitation.Create(
+            Id.New(),
+            request.Email,
+            hashedToken,
+            rawToken,
+            role.Id,
+            validTenantId,
+            DateTime.UtcNow.AddDays(_invitationExpiresAfter),
+            _currentUser.UserId
+        );
 
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try

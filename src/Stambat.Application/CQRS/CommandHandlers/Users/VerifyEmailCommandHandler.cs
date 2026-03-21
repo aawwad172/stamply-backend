@@ -46,8 +46,8 @@ public class VerifyEmailCommandHandler(
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
-            user.IsVerified = true;
-            token.IsUsed = true;
+            user.VerifyEmail();
+            token.MarkAsUsed();
 
             _userRepository.Update(user);
             _userTokenRepository.Update(token);

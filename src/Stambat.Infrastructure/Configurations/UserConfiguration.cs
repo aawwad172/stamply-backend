@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Stambat.Domain.Entities.Identity;
+using Stambat.Domain.ValueObjects;
 
 namespace Stambat.Infrastructure.Configurations;
 
@@ -17,6 +18,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         // Email & Username (unique)
         builder.Property(u => u.Email)
+            .HasConversion(e => e.Value, v => Stambat.Domain.ValueObjects.Email.Create(v))
             .IsRequired()
             .HasMaxLength(256);
 
