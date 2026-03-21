@@ -1,5 +1,9 @@
+using System.Security.Cryptography.X509Certificates;
+
 using Stambat.Domain.Common;
 using Stambat.Domain.Entities.Identity.Authentication;
+using Stambat.Domain.Enums;
+using Stambat.Domain.Exceptions;
 using Stambat.Domain.Interfaces.Domain.Auditing;
 using Stambat.Domain.ValueObjects;
 
@@ -26,6 +30,7 @@ public class User : IBaseEntity
     public virtual UserCredentials? Credentials { get; private set; }
     public ICollection<RefreshToken> RefreshTokens { get; private set; } = [];
     public ICollection<UserRoleTenant> UserRoleTenants { get; private set; } = [];
+    public ICollection<UserToken> UserTokens { get; private set; } = [];
     public ICollection<WalletPass> WalletPasses { get; private set; } = [];
 
     // EF Core constructor
@@ -53,6 +58,75 @@ public class User : IBaseEntity
     {
         IsVerified = true;
         UpdateSecurityStamp();
+    }
+
+    public void LinkToTenant(Guid tenantId, Guid roleId)
+    {
+        Guard.AgainstDefault(tenantId, nameof(tenantId));
+        Guard.AgainstDefault(roleId, nameof(roleId));
+
+        var existingLink = UserRoleTenants.FirstOrDefault(x => x.TenantId == tenantId && x.RoleId == roleId);
+
+        if (existingLink is null)
+        {
+            UserRoleTenants.Add(
+                UserRoleTenant.Create(
+                    IdGenerator.New(),
+                    Id,
+                    roleId,
+                    tenantId)
+            );
+        }
+        else
+        {
+            throw new ConflictException("User already has this role in this tenant.");
+        }
+    }
+
+    public void AddRefreshToken(
+        string tokenHash,
+        string plaintextToken,
+        DateTime expiresAt,
+        Guid tokenFamilyId)
+    {
+        Guard.AgainstNullOrEmpty(tokenHash, nameof(tokenHash));
+        Guard.AgainstNullOrEmpty(plaintextToken, nameof(plaintextToken));
+
+        var refreshToken = RefreshToken.Create(
+            IdGenerator.New(),
+            Id,
+            tokenFamilyId,
+            tokenHash,
+            plaintextToken,
+            expiresAt,
+            Id,
+            SecurityStamp
+        );
+
+        RefreshTokens.Add(refreshToken);
+    }
+
+    public void RevokeRefreshToken(string tokenHash)
+    {
+        Guard.AgainstNullOrEmpty(tokenHash, nameof(tokenHash));
+
+        var token = RefreshTokens.FirstOrDefault(rt => rt.TokenHash == tokenHash && !rt.IsRevoked);
+        token?.Revoke("Revoked via User domain method");
+    }
+
+    public void AddUserToken(UserTokenType type, string value, DateTime expiry)
+    {
+        Guard.AgainstNullOrEmpty(value, nameof(value));
+
+        var userToken = UserToken.Create(
+            IdGenerator.New(),
+            Id,
+            value,
+            type,
+            expiry
+        );
+
+        UserTokens.Add(userToken);
     }
 
     // Static factory for user registration/creation

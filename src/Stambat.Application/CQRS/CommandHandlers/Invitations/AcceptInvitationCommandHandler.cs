@@ -82,11 +82,11 @@ public class AcceptInvitationCommandHandler(
                 string hashedPassword = _securityService.HashSecret(request.Password);
 
                 // Generate a new security stamp
-                string securityStamp = Id.New().ToString();
+                string securityStamp = IdGenerator.New().ToString();
 
-                Guid id = Id.New();
+                Guid id = IdGenerator.New();
 
-                UserCredentials userCreds = UserCredentials.Create(Id.New(), id, hashedPassword);
+                UserCredentials userCreds = UserCredentials.Create(IdGenerator.New(), id, hashedPassword);
 
                 user = User.Create(
                     id,
@@ -105,7 +105,7 @@ public class AcceptInvitationCommandHandler(
             }
 
             UserRoleTenant userRoleTenant = UserRoleTenant.Create(
-                Id.New(),
+                IdGenerator.New(),
                 user!.Id,
                 invitation.RoleId,
                 invitation.TenantId

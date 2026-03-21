@@ -55,10 +55,10 @@ public class RegisterUserCommandHandler(
         string hashedPassword = _securityService.HashSecret(request.Password);
 
         // Generate a new security stamp
-        string securityStamp = Id.New().ToString();
+        string securityStamp = IdGenerator.New().ToString();
 
-        Guid id = Id.New();
-        UserCredentials userCreds = UserCredentials.Create(Id.New(), id, hashedPassword);
+        Guid id = IdGenerator.New();
+        UserCredentials userCreds = UserCredentials.Create(IdGenerator.New(), id, hashedPassword);
 
         Role? defaultRole = await _roleRepository.GetRoleByNameAsync(_defaultRole.ToString());
 
@@ -86,7 +86,7 @@ public class RegisterUserCommandHandler(
             await _userRepository.AddAsync(user);
 
             UserRoleTenant userRoleTenant = UserRoleTenant.Create(
-                Id.New(),
+                IdGenerator.New(),
                 user.Id,
                 defaultRole.Id,
                 null // Null until he enters his business data
@@ -94,9 +94,9 @@ public class RegisterUserCommandHandler(
 
             await _authenticationRepository.AddUserRoleTenantAsync(userRoleTenant);
 
-            string verificationToken = Id.New().ToString("N");
+            string verificationToken = IdGenerator.New().ToString("N");
             UserToken userToken = UserToken.Create(
-                Id.New(),
+                IdGenerator.New(),
                 user.Id,
                 verificationToken,
                 UserTokenType.EmailVerification,

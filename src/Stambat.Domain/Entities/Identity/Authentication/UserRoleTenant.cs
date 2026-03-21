@@ -30,4 +30,9 @@ public class UserRoleTenant : IEntity
             TenantId = tenantId
         };
     }
+
+    public void UpdateRole(Guid roleId)
+    {
+        RoleId = roleId;
+    }
 }

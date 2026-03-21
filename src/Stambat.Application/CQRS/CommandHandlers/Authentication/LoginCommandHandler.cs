@@ -48,7 +48,7 @@ public class LoginCommandHandler(
                 throw new UnauthenticatedException("Invalid email or password");
 
             // All tokens for this session belong to one family ID
-            Guid tokenFamilyId = Id.New();
+            Guid tokenFamilyId = IdGenerator.New();
 
             string accessToken = await _jwtService.GenerateAccessTokenAsync(user);
 

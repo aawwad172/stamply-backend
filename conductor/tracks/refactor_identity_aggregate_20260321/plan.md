@@ -1,6 +1,6 @@
 # Implementation Plan: Refactor Identity Aggregate to Rich Domain Model
 
-## Phase 1: Value Objects and Core Aggregate Foundation
+## Phase 1: Value Objects and Core Aggregate Foundation [checkpoint: 1c3c8f9]
 1.  - [x] Task: Implement Value Objects
     - [x] Create `FullName` value object in `Stambat.Domain.ValueObjects`.
     - [x] Create `Email` value object in `Stambat.Domain.ValueObjects`.
@@ -12,15 +12,15 @@
     - [x] Make all property setters `private` or `init` in `User.cs`.
     - [x] Remove public constructors and implement `public static User Create(...)`.
     - [x] Ensure related entities (`RefreshToken`, `UserToken`, `UserRoleTenant`) also have encapsulated state and restricted constructors.
-4.  - [ ] Task: Conductor - User Manual Verification 'Phase 1: Value Objects and Core Aggregate Foundation' (Protocol in workflow.md)
+4.  - [x] Task: Conductor - User Manual Verification 'Phase 1: Value Objects and Core Aggregate Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Domain Logic Implementation
-1.  - [ ] Task: Implement Domain Methods in User Aggregate
-    - [ ] Implement `VerifyEmail()` method in `User`.
-    - [ ] Implement `LinkToTenant(Guid tenantId, Guid roleId)` with the specified logic (Link/Update/Throw).
-    - [ ] Implement `AddRefreshToken(string token, DateTime expiry)` to manage the `RefreshTokens` collection internally.
-    - [ ] Implement `RevokeRefreshToken(string token)` to mark a token as revoked.
-    - [ ] Implement `AddUserToken(UserTokenType type, string value, DateTime expiry)` to manage the `UserTokens` collection.
+1.  - [x] Task: Implement Domain Methods in User Aggregate
+    - [x] Implement `VerifyEmail()` method in `User`.
+    - [x] Implement `LinkToTenant(Guid tenantId, Guid roleId)` with the specified logic (Link/Update/Throw).
+    - [x] Implement `AddRefreshToken(string token, DateTime expiry)` to manage the `RefreshTokens` collection internally.
+    - [x] Implement `RevokeRefreshToken(string token)` to mark a token as revoked.
+    - [x] Implement `AddUserToken(UserTokenType type, string value, DateTime expiry)` to manage the `UserTokens` collection.
 2.  - [ ] Task: Conductor - User Manual Verification 'Phase 2: Domain Logic Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Infrastructure and Repository Consolidation

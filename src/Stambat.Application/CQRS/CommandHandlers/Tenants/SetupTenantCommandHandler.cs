@@ -54,7 +54,7 @@ public class SetupTenantCommandHandler(
             // IMPORTANT: This prevents users from being created without a role if the DB isn't seeded.
             throw new InvalidOperationException($"The TenantAdmin role '{_tenantAdminRole}' does not exist in the database. Please seed roles.");
 
-        Guid tenantId = Id.New();
+        Guid tenantId = IdGenerator.New();
         TenantEntity tenant = TenantEntity.Create(
             tenantId,
             request.CompanyName,
@@ -68,7 +68,7 @@ public class SetupTenantCommandHandler(
             await _tenantRepository.AddAsync(tenant);
 
             UserRoleTenant userRoleTenant = UserRoleTenant.Create(
-                Id.New(),
+                IdGenerator.New(),
                 user.Id,
                 tenantAdminRole.Id,
                 tenantId

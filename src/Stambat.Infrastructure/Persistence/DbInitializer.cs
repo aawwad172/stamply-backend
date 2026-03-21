@@ -36,7 +36,7 @@ public static class DbInitializer
             if (!await context.Users.AnyAsync(u => u.Id == AuthSeedConstants.SystemUserId))
             {
                 Guid systemUserId = AuthSeedConstants.SystemUserId;
-                Guid credentialsId = Id.New();
+                Guid credentialsId = IdGenerator.New();
 
                 User? systemUser = User.Create(
                     systemUserId,
@@ -61,7 +61,7 @@ public static class DbInitializer
 
                 // Assign SuperAdmin role to system user
                 context.UserRoleTenants.Add(UserRoleTenant.Create(
-                    Id.New(),
+                    IdGenerator.New(),
                     systemUserId,
                     AuthSeedConstants.RoleIdSuperAdmin
                 ));
@@ -78,7 +78,7 @@ public static class DbInitializer
                 if (!hasRole)
                 {
                     context.UserRoleTenants.Add(UserRoleTenant.Create(
-                        Id.New(),
+                        IdGenerator.New(),
                         AuthSeedConstants.SystemUserId,
                         AuthSeedConstants.RoleIdSuperAdmin
                     ));

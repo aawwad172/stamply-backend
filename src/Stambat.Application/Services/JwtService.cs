@@ -41,7 +41,7 @@ public class JwtService(
             new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
             new(JwtRegisteredClaimNames.UniqueName, user.Username),
             new(JwtRegisteredClaimNames.Email, user.Email.Value),
-            new(JwtRegisteredClaimNames.Jti, Id.New().ToString()), // Unique Token ID
+            new(JwtRegisteredClaimNames.Jti, IdGenerator.New().ToString()), // Unique Token ID
             // --- ADD SECURITY STAMP CLAIM HERE ---
             new("security_stamp", user.SecurityStamp)
         };
@@ -89,7 +89,7 @@ public class JwtService(
                 : throw new InvalidOperationException("Jwt:RefreshTokenExpirationDays must be a valid integer."));
 
         return RefreshToken.Create(
-            Id.New(),
+            IdGenerator.New(),
             user.Id,
             tokenFamilyId,
             combinedHashSalt,

@@ -53,7 +53,7 @@ public class VerifyEmailCommandHandler(
             _userTokenRepository.Update(token);
 
 
-            Guid tokenFamilyId = Id.New();
+            Guid tokenFamilyId = IdGenerator.New();
             string accessToken = await _jwtService.GenerateAccessTokenAsync(user);
             RefreshToken refreshtoken = _jwtService.CreateRefreshTokenEntity(user, tokenFamilyId);
 
